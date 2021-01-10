@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Armadillo / Plugins</title>
+	<link href="/static/css/main.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<h1>These are the backend plugins currently loaded</h1>
+		<% plugins.forEach(plugin => { %> 
+			<div class="surface <%= plugin.enabled ? "border-success" : "border-error" %> border-left border-medium">
+				<h1><%= plugin.meta.name %></h1>
+				<p> <%= plugin.meta.description %> </p>
+				<% if(plugin.meta.github != "") { %>
+					<p><a href="<%= plugin.meta.github %>">github repo</a></p>
+				<% } %>
+				<small> Version <%= plugin.meta.version.join(".") %> - <%= plugin.enabled ? "enabled" : "disabled" %> </small>
+			</div>
+		<% }) %>
+	</div>
+	<div class="sticky-bottom footer primary padding-medium"> 
+		<div class="container">
+			<h3>Enabling/disabling plugins</h3>
+			<p>To enable or disable a plugin set the "enabled" bool in the module.js file to either true or false</p>
+		</div>
+	</div>
+</body>
+</html>

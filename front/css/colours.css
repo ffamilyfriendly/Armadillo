@@ -1,0 +1,37 @@
+:root {
+	/* Surfaces and such */
+	--on-background: black;
+	--on-surface: black;
+	--background: white;
+	--surface: white;
+	--on-surface-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+
+	/* Status colours */
+	--success: rgb(16, 172, 16);
+	--error: red;
+	--info: rgb(0, 217, 255);
+
+	/* element colours */
+	--primary: slateblue;
+	--on-primary: white;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		/* Surfaces and such */
+		--on-background: #ffffff;
+		--on-surface: #ffffff;
+		--background: #121212;
+		--surface: #242424;
+		--on-surface-shadow: none;
+
+		/* Status colours */
+		--success: rgb(16, 172, 16);
+		--error: red;
+		--info: rgb(0, 217, 255);
+
+		/* element colours */
+		--primary: slateblue;
+		--on-primary: white;
+	}
+}

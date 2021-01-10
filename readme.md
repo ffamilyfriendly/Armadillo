@@ -4,5 +4,10 @@ The name was picked because I think armadillos are pretty cool looking
 
 ## Features
 
+
 ## todo
-- [ ] website
+- [ ] Secure user login
+- [ ] nyafilmer movie scraper
+
+---
+If you find any issues with the code open an issue [**HERE**](https://github.com/ffamilyfriendly/Armadillo/issues)

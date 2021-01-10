@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
+@import url('/static/css/colours.css');
+
+:root {
+	font-family: 'Oswald', sans-serif;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background-color: var(--background);
+	color: var(--on-background);
+}
+
+a {
+	color: var(--primary);
+}
+
+/* Colours */
+.primary {
+	background-color: var(--primary);
+	color: var(--on-primary);
+}
+
+.hide {
+	display: none;
+}
+
+
+.surface {
+	padding: 0.25em;
+	margin: 0.25em;
+	background-color: var(--surface);
+	color: var(--on-surface);
+	box-shadow: var(--on-surface-shadow);
+}
+
+/* borders */
+
+.border-error {
+	border-color: var(--error) !important;
+}
+
+.border-success {
+	border-color: var(--success) !important;
+}
+
+.border-info {
+	border-color: var(--info) !important;
+}
+
+.border-thin {
+	border-width: 1px !important;
+}
+
+.border-medium {
+	border-width: 5px !important;
+}
+
+.border-thick {
+	border-width: 7px !important;
+}
+
+.border-left {
+	border-left: 1px solid white;
+}
+
+.border-right {
+	border-right: 1px solid white;
+}
+
+.border-top {
+	border-top: 1px solid white;
+}
+
+.border-bottom {
+	border-bottom: 1px solid white;
+}
+
+/* margins and paddings */
+.padding-small {
+	padding: 0.25em;
+}
+
+.padding-medium {
+	padding: 0.5em;
+}
+
+.padding-large {
+	padding: 1em;
+}
+
+/* container */
+.container {
+	width: 80%;
+	margin: auto;
+}
+
+/* footer */
+.footer {
+	width: 100%;
+}
+
+.sticky-bottom {
+	position: fixed;
+	bottom: 0;
+}
+
+.text-center {
+	text-align: center;
+}
+
+/* buttons */
+
+.button {
+	border: none;
+	cursor: pointer;
+}
+
+.button-small {
+	padding: 0.25em;
+}
+
+.button-medium {
+	padding: 0.5em;
+}
+
+.button-large {
+	padding: 1em;
+}
+
+.full-width {
+	width: 100%;
+}
