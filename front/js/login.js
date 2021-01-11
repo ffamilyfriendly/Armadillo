@@ -30,9 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		})
 		.then(res => {
-			console.log(document.referrer)
-			if(!res.ok) document.getElementById("passErr").classList.remove("hide")
-			else {document.getElementById("passOk").classList.remove("hide"); setTimeout(() => location.href = "/", 2000)}
+			if(!res.ok) return document.getElementById("passErr").classList.remove("hide")
+			localStorage.setItem("loggedIn",true)
+			document.getElementById("passOk").classList.remove("hide"); setTimeout(() => location.href = "/", 2000)
 		})
 		.catch(err => {
 			document.getElementById("passErr").classList.remove("hide")

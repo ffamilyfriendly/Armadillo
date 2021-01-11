@@ -5,17 +5,21 @@ module.exports = class {
 		this.id = obj.id
 		this.joinedAt = new Date(obj.joinedAt)
 		this.lastVisit = new Date(obj.lastVisit)
-		this.permissions = new Map()
-		this.initialised = false
-		this.fetchPerms()
+		this.permissions = {}
 	}
 
-	fetchPerms() {
-		db.all(`SELECT * FROM simpleValues WHERE scope = ? & type="permission"`,[this.id], (err,data) => {
-			if(err) return console.error(`Could not initalize perms of user with id "${this.id}"`)
-			data.forEach( row => this.permissions.set(row.id,row.value))
-			console.log(data)
-			this.initialised = true
+	allowed(perm) {
+		return this.permissions[perm] && this.permissions[perm] === "true"
+	}
+
+	getPerms() {
+		return new Promise((resolve,reject) => {
+			let perms = {}
+			db.all(`SELECT * FROM simpleValues WHERE scope = ? AND type = "permission"`,[this.id] , (err,data) => {
+				if(err) {reject(`Could not initalize perms of user with id "${this.id}"`)}
+				data.forEach( row => perms[row.id] = row.value)
+				resolve(perms)
+			})
 		})
 	}
 }

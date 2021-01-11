@@ -1,6 +1,6 @@
 const router = require("express").Router(),
 	path = require("path"),
-	{r_params} = require("./helpers"),
+	{r_params,http_codes} = require("./helpers"),
 	db = require("./database.module").db,
 	bcrypt = require("bcrypt"),
 	User = require("./user")
@@ -35,21 +35,33 @@ router.get("/login", (req,res) => {
 	res.sendFile(path.join(__dirname,"../../front","login.html"))
 })
 
-router.post("/login", (req,res) => {
+router.get("/me", (req,res) => {
+	if(!req.session.user) return res.status(http_codes.Unauthorized).send("no user object exists")
+	return res.send(req.session.user)
+})
 
+router.post("/login", (req,res) => {
 	const {username,password} = req.body
-	if(r_params([username,password])) return res.status(400).send("malformed request")
+	if(r_params([username,password])) return res.status(http_codes.Bad_Request).send("malformed request")
 	db.all(`SELECT * FROM users WHERE id = ?`,[username], (err,data) => {
-		if(err || !data[0]) return res.status(401).send("password or username faulty")
+		if(err || !data[0]) return res.status(http_codes.Unauthorized).send("password or username faulty")
 		bcrypt.compare(password,data[0].password, (err,result) => {
-			if(err) return res.status(401).send("password or username faulty")
+			if(err) return res.status(http_codes.Unauthorized).send("password or username faulty")
 			if(result) {
+				db.all("UPDATE users SET lastVisit = ? WHERE id = ?",[Date.now(),username])
 				req.session.user = new User(data[0])
-				console.log(req.session.user)
-				return res.send("logged in")
-			} else return res.status(401).send("password or username faulty")
+				req.session.user.getPerms()
+				.then( perms => {
+					req.session.user.permissions = perms
+					return res.send("logged in")
+				})
+			} else return res.status(http_codes.Unauthorized).send("password or username faulty")
 		})
 	})
+})
+
+router.get("/settings", (req,res) => {
+	if(!req.session.user) return res.redirect("/login")
 })
 
 const run = () => {
