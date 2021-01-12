@@ -1,5 +1,10 @@
 const router = require("express").Router()
 const path = require("path")
+const request = require("request")
+
+router.get("/plugins.json",(req,res) => {
+	res.send(process.armadillo.plugins)
+})
 
 router.get("/browse/:id", (req,res) => {
 	if(!req.session.user) return res.redirect("/")

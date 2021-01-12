@@ -1,0 +1,36 @@
+.meta-import {
+	z-index: 10;
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: 0.5s;
+    left: 0; top: 0; right: 0; bottom: 0;
+	background-color: rgba(0, 0, 0, 0.37);
+}
+
+.meta-import:hover {
+	opacity: 1;
+}
+
+.mdb-res img {
+	width: 10em;
+	display: inline-block;
+}
+
+.mdb-res .metaContent {
+	height: 100%;
+	display: inline-block;
+}
+
+.mdb-res {
+	cursor: pointer;
+	position: relative;
+	display: flex;
+	border-bottom: 2px solid black;
+}
+
+.mdb-res svg {
+	transform: scale(2);
+}

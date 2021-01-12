@@ -11,11 +11,66 @@
 </head>
 <body>
 	<div class="container">
+		<div class="surface">
+			<h1>Main data</h1>
+		</div>
+		<div class="surface">
+			<h1>Metadata</h1>
 
+			<div class="form-group">
+				<label for="fullname">Full name</label>
+				<input type="text" id="fullname" placeholder="full name">
+			</div>
+
+			<div class="form-group">
+				<label for="description">description</label>
+				<input type="text" id="description" placeholder="description">
+			</div>
+
+			<div class="form-group">
+				<label for="posterPath">Poster url</label>
+				<input type="url" id="posterPath" placeholder="thumbnail url">
+			</div>
+
+			<div class="form-group">
+				<label for="rating">ratings</label>
+				<input type="number" id="rating" placeholder="10" max="10" min="0">
+			</div>
+
+			<div class="form-group">
+				<label for="introstart">Intro start time</label>
+				<input type="number" id="introstart" placeholder="10">
+			</div>
+
+			<div class="form-group">
+				<label for="introend">Intro end time</label>
+				<input type="number" id="introend" placeholder="10">
+			</div>
+
+			<div class="form-group">
+				<label for="outrostart">Outro start time</label>
+				<input type="number" id="outrostart" placeholder="10">
+			</div>
+
+			<!-- Only usable with themoviedatabase plugin enabled -->
+			<div class="hide" id="tmdb">
+				<a onclick="initMetaImport()" href="#t">import metadata with imdb</a>
+				<div class="hide" id="metaImport">
+					<input type="search" id="searchUrl">
+					<button onclick="searchMeta()" class="button primary padding-medium">Search</button>
+					<hr>
+					<div id="metaSearchResults">
+
+					</div>
+				</div>
+			</div>
+			<!-- /////////////////////////////////////////////// -->
+
+		</div>
 	</div>
 	<div class="sticky-bottom footer primary padding-medium"> 
 		<div class="container">
-			<a class="margin-medium" onclick="history.back()" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 22h-4v-4h4v4zm0-12h-4v4h4v-4zm0-8h-4v4h4v-4zm3 0v4h17v-4h-17zm0 12h17v-4h-17v4zm0 8h17v-4h-17v4z"/></svg></a>
+			<a class="margin-medium" onclick="history.back()" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z"/></svg></a>
 		</div>
 	</div>
 </body>

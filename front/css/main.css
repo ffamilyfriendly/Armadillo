@@ -13,6 +13,7 @@
 body {
 	background-color: var(--background);
 	color: var(--on-background);
+	padding-bottom: 10em;
 }
 
 .vl {
@@ -205,6 +206,15 @@ svg path {
 	width: 10em;
 	padding: 0.5em;
 	cursor: pointer;
+}
+
+
+.form-group label {
+	display: block;
+}
+
+.form-group input {
+	display: block;
 }
 
 /* anim */
