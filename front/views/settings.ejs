@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Armadillo / Plugins</title>
+	<link href="/static/css/main.css" rel="stylesheet">
+	<% plugins.forEach(p => { %>
+		<script src="<%= p %>"></script>
+	<% }) %>
+	<script src="/static/js/settings.js"></script>
+</head>
+<body>
+	<div class="container">
+		<h1>User Settings</h1>
+
+		<div>
+			<h2>Change password</h2>
+			<form id="changePassForm">
+				<label for="old_password">Old password</label>
+				<input class="input input-block input-underline margin-medium" id="old_password" type="password" placeholder="old password">
+				<label for="new_password">New password</label>
+				<input class="input input-block input-underline margin-medium" id="new_password" type="password" placeholder="new password">
+				<input type="submit" class="margin-medium button button-medium primary" value="change password">
+			</form>
+			<p class="hide text-error" id="pass_updateFailed">⚠️ Could not update password</p>
+			<p class="hide text-success" id="pass_updateDone">✅ updated password</p>
+		</div>
+
+		<% if(me.permissions["admin"] && me.permissions["admin"] == "true") { %>
+		<div>
+			<h1>Global Settings</h1>
+			<p>Be carefull when editing these settings.</p>
+
+			<div id="settingContainer">
+				<div class="surface">
+					<h2>Setting name</h2>
+					<label for="name_value">Value</label>
+					<input type="text" id="name_value">
+					<button class="button padding-small primary">save</button>
+					<button class="button padding-small error">remove</button>
+				</div>
+			</div>
+		</div>
+		<% } %>
+	</div>
+	<div class="sticky-bottom footer primary padding-medium"> 
+		<div class="container">
+			<h3>Enabling/disabling plugins</h3>
+			<p>To enable or disable a plugin set the "enabled" bool in the module.js file to either true or false</p>
+		</div>
+	</div>
+</body>
+</html>

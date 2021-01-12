@@ -2,11 +2,20 @@ const { fstat } = require("fs")
 const sqlite = require("sqlite3")
 const db = new sqlite.Database("./data/data.db")
 
+const setGlobalPerms = () => {
+	db.all("SELECT * FROM simpleValues WHERE scope=\"global\"", (err, data) => {
+		data.forEach( row => {
+			process.armadillo.permissions[row.id] = row
+		})
+	})
+}
+
 const run = () => {
 	db.serialize(() => {
 		db.run("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, password TEXT, joinedAt INTEGER, lastVisit INTEGER);")
 		db.run("CREATE TABLE IF NOT EXISTS simpleValues (id TEXT, scope TEXT, type TEXT, value TEXT);")
 		db.run("CREATE TABLE IF NOT EXISTS invites (id TEXT PRIMARY KEY, uses INTEGER, description TEXT);")
+		setGlobalPerms()
 	})
 }
 

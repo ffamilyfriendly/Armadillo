@@ -25,6 +25,19 @@ a {
 	color: var(--on-primary);
 }
 
+.error {
+	background-color: var(--error);
+	color: var(--on-primary);
+}
+
+.text-error {
+	color: var(--error);
+}
+
+.text-success {
+	color: var(--success);
+}
+
 .hide {
 	display: none;
 }
@@ -93,6 +106,18 @@ a {
 	padding: 1em;
 }
 
+.margin-small {
+	margin: 0.25em;
+}
+
+.margin-medium {
+	margin: 0.5em;
+}
+
+.margin-large {
+	margin: 1em;
+}
+
 /* container */
 .container {
 	width: 80%;
@@ -134,4 +159,35 @@ a {
 
 .full-width {
 	width: 100%;
+}
+
+/* inputs */
+.input {
+	border: none;
+	background-color: transparent;
+	padding: 0.2em;
+	color:var(--on-background);
+}
+
+.input-underline {
+	border-bottom: 1px solid var(--on-background);
+}
+
+.input-block {
+	display: block;
+}
+
+.input-large {
+	display: block;
+}
+
+/* anim */
+.fadeOut {
+	animation-name: fadeOut;
+	animation-duration: 2s;
+}
+
+@keyframes fadeOut {
+	0% { opacity: 1; }
+	100% { opacity: 0; }
 }

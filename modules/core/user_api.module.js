@@ -5,17 +5,27 @@ const router = require("express").Router(),
 	bcrypt = require("bcrypt"),
 	User = require("./user")
 
+const hashPass = (pass) => {
+	return new Promise((resolve,reject) => {
+		bcrypt.genSalt(10, (err,salt) => {
+			if(err) reject(err)
+			bcrypt.hash(pass,salt, (err, hash) => {
+				if(err) reject(err)
+				resolve(hash)
+			})
+		})
+	})
+}
 
 const generateUser = (username,passwords,perms) => {
-	bcrypt.genSalt(10, (err,salt) => {
-		bcrypt.hash(passwords,salt, (err, hash) => {
-			db.run(`INSERT INTO users VALUES(?,?,?,?)`, [username,hash,Date.now(),Date.now()],(err) => {
-				if(!err) {
-					perms.forEach(p => {
-						db.run(`INSERT INTO simpleValues VALUES("${p}","${username}","permission","true")`)
-					})
-				} else console.error(err)
-			})
+	hashPass(passwords)
+	.then(pass => {
+		db.run(`INSERT INTO users VALUES(?,?,?,?)`, [username,pass,Date.now(),Date.now()],(err) => {
+			if(!err) {
+				perms.forEach(p => {
+					db.run(`INSERT INTO simpleValues VALUES("${p}","${username}","permission","true")`)
+				})
+			} else console.error(err)
 		})
 	})
 }
@@ -60,8 +70,29 @@ router.post("/login", (req,res) => {
 	})
 })
 
+router.post("/changePassword", (req,res) => {
+	const {oldPass,newPass} = req.body
+	if(r_params([oldPass,newPass,req.session.user])) return res.status(http_codes.Bad_Request).send("malformed request")
+	db.all(`SELECT * FROM users WHERE id = ?`,[req.session.user.id], (err,data) => {
+		if(err || !data[0]) return res.status(http_codes.Unauthorized).send("old passwords does not match")
+		bcrypt.compare(oldPass,data[0].password, (err,result) => {
+			if(err) return res.status(http_codes.Unauthorized).send("password or username faulty")
+			if(result) {
+				hashPass(newPass)
+				.then(pass => {
+					db.run(`UPDATE users SET password = ? WHERE id = ?`,[pass,req.session.user.id], (err) => {
+						if(err) return res.status(500).send("could not set password")
+						else res.send("password updated!")
+					})
+				})
+			} else return res.status(http_codes.Unauthorized).send("old passwords does not match")
+		})
+	})
+})
+
 router.get("/settings", (req,res) => {
 	if(!req.session.user) return res.redirect("/login")
+	res.render("settings", { global: process.armadillo.permissions, me:req.session.user, plugins:process.armadillo.frontEndPlugins })
 })
 
 const run = () => {
