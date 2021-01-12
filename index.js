@@ -4,7 +4,7 @@ const express = require("express"),
 	store = new cs.MemoryStore(),
 	getFiles = require("./lib/filelist"),
 	bodyParser = require("body-parser")
-	process.armadillo = { config:require("./config"), plugins:[], permissions:{}, frontEndPlugins:require("./pluginList")}
+	process.armadillo = { config:require("./config"), plugins:[], permissions:{}}
 
 
 

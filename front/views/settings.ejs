@@ -3,11 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Armadillo / Plugins</title>
+	<title>Armadillo / Settings</title>
 	<link href="/static/css/main.css" rel="stylesheet">
-	<% plugins.forEach(p => { %>
-		<script src="<%= p %>"></script>
-	<% }) %>
+	<script src="/static/js/main.js"></script>
 	<script src="/static/js/settings.js"></script>
 </head>
 <body>
@@ -27,27 +25,31 @@
 			<p class="hide text-success" id="pass_updateDone">✅ updated password</p>
 		</div>
 
-		<% if(me.permissions["admin"] && me.permissions["admin"] == "true") { %>
 		<div>
-			<h1>Global Settings</h1>
-			<p>Be carefull when editing these settings.</p>
+			<h2>Change picture</h2>
+			<p class="hide text-error" id="pfp_failed">⚠️ Could not update profile pic</p>
+			<div id="imgContainer">
 
+			</div>
+		</div>
+
+		<% if(me.admin) { %>
+		<div>
+			<h1>Create account</h1>
 			<div id="settingContainer">
-				<div class="surface">
-					<h2>Setting name</h2>
-					<label for="name_value">Value</label>
-					<input type="text" id="name_value">
-					<button class="button padding-small primary">save</button>
-					<button class="button padding-small error">remove</button>
-				</div>
+				<label for="new_username">Username</label>
+				<input class="input input-underline" type="text" id="new_uusername">
+				<label for="new_password">Password</label>
+				<input class="input input-underline" type="text" id="new_upassword">
+				<button onclick="registerUser()" class="button button-primary padding-medium primary">create</button>
 			</div>
 		</div>
 		<% } %>
 	</div>
 	<div class="sticky-bottom footer primary padding-medium"> 
 		<div class="container">
-			<h3>Enabling/disabling plugins</h3>
-			<p>To enable or disable a plugin set the "enabled" bool in the module.js file to either true or false</p>
+			<a class="margin-medium" onclick="history.back()" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 22h-4v-4h4v4zm0-12h-4v4h4v-4zm0-8h-4v4h4v-4zm3 0v4h17v-4h-17zm0 12h17v-4h-17v4zm0 8h17v-4h-17v4z"/></svg></a>
+			<a class="margin-medium" href="/search"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M23.111 20.058l-4.977-4.977c.965-1.52 1.523-3.322 1.523-5.251 0-5.42-4.409-9.83-9.829-9.83-5.42 0-9.828 4.41-9.828 9.83s4.408 9.83 9.829 9.83c1.834 0 3.552-.505 5.022-1.383l5.021 5.021c2.144 2.141 5.384-1.096 3.239-3.24zm-20.064-10.228c0-3.739 3.043-6.782 6.782-6.782s6.782 3.042 6.782 6.782-3.043 6.782-6.782 6.782-6.782-3.043-6.782-6.782zm2.01-1.764c1.984-4.599 8.664-4.066 9.922.749-2.534-2.974-6.993-3.294-9.922-.749z"/></svg></a>
 		</div>
 	</div>
 </body>

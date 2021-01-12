@@ -15,14 +15,33 @@ body {
 	color: var(--on-background);
 }
 
+.vl {
+	display: inline-block;
+	height: 2em;
+	border-left: 3px solid rgba(255, 255, 255, 0.575);
+}
+
 a {
 	color: var(--primary);
+}
+
+svg {
+	width: 2em;
+	height: 2em;
+}
+
+svg path {
+	fill: var(--on-background);
 }
 
 /* Colours */
 .primary {
 	background-color: var(--primary);
 	color: var(--on-primary);
+}
+
+.selected {
+	outline: 0.5em solid var(--primary);
 }
 
 .error {
@@ -179,6 +198,13 @@ a {
 
 .input-large {
 	display: block;
+}
+
+.profilePicture {
+	height: 10em;
+	width: 10em;
+	padding: 0.5em;
+	cursor: pointer;
 }
 
 /* anim */

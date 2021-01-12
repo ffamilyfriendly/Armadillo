@@ -20,13 +20,7 @@ const hashPass = (pass) => {
 const generateUser = (username,passwords,perms) => {
 	hashPass(passwords)
 	.then(pass => {
-		db.run(`INSERT INTO users VALUES(?,?,?,?)`, [username,pass,Date.now(),Date.now()],(err) => {
-			if(!err) {
-				perms.forEach(p => {
-					db.run(`INSERT INTO simpleValues VALUES("${p}","${username}","permission","true")`)
-				})
-			} else console.error(err)
-		})
+		db.run(`INSERT OR IGNORE INTO users VALUES(?,?,?,?,?)`, [username,pass,"default",Date.now(),Date.now()])
 	})
 }
 
@@ -40,14 +34,39 @@ const checkInit = () => {
 	})
 }
 
-router.get("/login", (req,res) => {
+router.get("/", (req,res) => {
 	checkInit()
-	res.sendFile(path.join(__dirname,"../../front","login.html"))
+	res.sendFile(path.join(__dirname,"../../front/login.html"))
+})
+
+router.post("/register", (req,res) => {
+	if(!req.session.user) res.redirect("/")
+	if(!req.session.user.admin) res.status(http_codes.Forbidden).send("no registration allowed")
+	const {password, username} = req.body
+	if(!password || !username) return res.status(http_codes.Bad_Request).send("no password or username")
+	generateUser(username,password)
+	res.send("created!")
 })
 
 router.get("/me", (req,res) => {
 	if(!req.session.user) return res.status(http_codes.Unauthorized).send("no user object exists")
 	return res.send(req.session.user)
+})
+
+router.get("/users", (req,res) => {
+	db.all("SELECT id, picture FROM users", (err,data) => {
+		res.send(data)
+	})
+})
+
+const userImages = require("./images")
+
+router.get("/images", (req,res) => {
+	res.send(userImages)
+})
+
+router.get("/img/:name", (req,res) => {
+	res.redirect(userImages[req.params.name])
 })
 
 router.post("/login", (req,res) => {
@@ -60,11 +79,7 @@ router.post("/login", (req,res) => {
 			if(result) {
 				db.all("UPDATE users SET lastVisit = ? WHERE id = ?",[Date.now(),username])
 				req.session.user = new User(data[0])
-				req.session.user.getPerms()
-				.then( perms => {
-					req.session.user.permissions = perms
-					return res.send("logged in")
-				})
+				return res.send("logged in")
 			} else return res.status(http_codes.Unauthorized).send("password or username faulty")
 		})
 	})
@@ -90,9 +105,17 @@ router.post("/changePassword", (req,res) => {
 	})
 })
 
+router.post("/profilePic", (req,res) => {
+	const image = req.body.image
+	if(!req.session.user || !image) return res.status(http_codes.Bad_Request).send("need to be signed in")
+	req.session.user.picture = image
+	db.run("UPDATE users SET picture = ? WHERE id = ?", [image,req.session.user.id])
+	res.send("updated")
+})
+
 router.get("/settings", (req,res) => {
-	if(!req.session.user) return res.redirect("/login")
-	res.render("settings", { global: process.armadillo.permissions, me:req.session.user, plugins:process.armadillo.frontEndPlugins })
+	if(!req.session.user) return res.redirect("/")
+	res.render("settings", { global: process.armadillo.permissions, me:req.session.user})
 })
 
 const run = () => {
