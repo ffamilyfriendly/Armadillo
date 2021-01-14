@@ -1,4 +1,3 @@
-const { fstat } = require("fs")
 const sqlite = require("sqlite3")
 const db = new sqlite.Database("./data/data.db")
 
@@ -12,6 +11,7 @@ const run = () => {
 		type, media or category
 		parent, parent of content
 		path, path to the media. If category this does no matter
+		next, id of next thing to autoplay
 		hasmeta, 1 if obj has metadata, 0 if not
 		*/
 		db.run(`CREATE TABLE IF NOT EXISTS content (
@@ -20,6 +20,7 @@ const run = () => {
 			type TEXT,
 			parent TEXT, 
 			path TEXT,
+			next TEXT,
 			hasmeta INTEGER
 		);`)
 

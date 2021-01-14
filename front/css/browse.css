@@ -1,0 +1,43 @@
+.edit-btn {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.content {
+	position: relative;
+	display: flex;
+	cursor: pointer;
+}
+
+.content .rating-container {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+.shitty {
+	background-color: red;
+}
+
+.bad {
+	background-color: rgb(255, 166, 0);
+}
+
+.meh {
+	background-color: rgb(79, 128, 0);
+}
+
+.good {
+	background-color: green;
+}
+
+.godly {
+	background-color: gold;
+}
+
+.content img {
+	width: 10em;
+	height: auto;
+	display: inline-block;
+}

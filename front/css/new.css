@@ -16,6 +16,7 @@
 
 .mdb-res img {
 	width: 10em;
+	height: auto;
 	display: inline-block;
 }
 
@@ -33,4 +34,35 @@
 
 .mdb-res svg {
 	transform: scale(2);
+}
+
+#updated-notification {
+	position: fixed;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 200;
+}
+
+#updated-notification a {
+	color: inherit;
+	text-decoration: none;
+}
+
+#updated-notification div {
+	background-color: rgba(8, 233, 8, 0.336);
+	outline: 2px solid rgb(4, 236, 4);
+}
+
+.slideUp {
+	animation-name: slideUp;
+	animation-duration: 0.5s;
+	animation-timing-function: ease-in;
+}
+
+@keyframes slideUp {
+	100% { transform: translateY(-150%); }
 }

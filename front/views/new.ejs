@@ -3,58 +3,93 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Armadillo / Settings</title>
+	<title>Armadillo / Edit</title>
 	<link href="/static/css/main.css" rel="stylesheet">
 	<link href="/static/css/new.css" rel="stylesheet">
 	<script src="/static/js/main.js"></script>
 	<script src="/static/js/new.js"></script>
 </head>
 <body>
+	<input type="hidden" id="r_parent" value="<%= content.parent %>">
+	<input type="hidden" id="r_id" value="<%= content.id %>">
+
 	<div class="container">
-		<div class="surface">
-			<h1>Main data</h1>
+		<div class="surface padding-large">
+			<h1 id="top">Main data</h1>
+			<div class="form-group">
+				<label for="displayname">Displayname</label>
+				<input type="text" id="displayname" value="<%= content.displayname %>">
+			</div>
+
+			<div class="form-group">
+				<label for="path">Path</label>
+				<input type="text" id="path" value="<%= content.path %>">
+			</div>
+
+			<div class="form-group">
+				<label for="nextUp">Next</label>
+				<input type="text" id="nextUp" value="<%= content.next %>">
+			</div>
+
+			<div class="form-group">
+				<label for="hasmeta">Has meta</label>
+				<input type="number" min="0" max="1" id="hasmeta" value="<%= content.hasmeta %>">
+			</div>
+
+			<button onclick="saveMainData()" class="button primary padding-large margin-large">Save main data</button>
 		</div>
-		<div class="surface">
+		<div class="surface padding-large">
 			<h1>Metadata</h1>
 
 			<div class="form-group">
 				<label for="fullname">Full name</label>
-				<input type="text" id="fullname" placeholder="full name">
+				<input type="text" id="fullname" value="<%= meta.fullname %>">
 			</div>
 
 			<div class="form-group">
 				<label for="description">description</label>
-				<input type="text" id="description" placeholder="description">
+				<input type="text" id="description" value="<%= meta.description %>">
 			</div>
 
 			<div class="form-group">
-				<label for="posterPath">Poster url</label>
-				<input type="url" id="posterPath" placeholder="thumbnail url">
+				<label for="thumbnail">Poster url</label>
+				<input type="text" id="thumbnail" value="<%= meta.thumbnail %>">
 			</div>
 
 			<div class="form-group">
 				<label for="rating">ratings</label>
-				<input type="number" id="rating" placeholder="10" max="10" min="0">
+				<input type="number" step="0.1" id="rating" value="<%= meta.rating %>" max="10" min="0">
 			</div>
 
 			<div class="form-group">
 				<label for="introstart">Intro start time</label>
-				<input type="number" id="introstart" placeholder="10">
+				<input type="number" id="introstart" value="<%= meta.introstart %>">
 			</div>
 
 			<div class="form-group">
 				<label for="introend">Intro end time</label>
-				<input type="number" id="introend" placeholder="10">
+				<input type="number" id="introend" value="<%= meta.introend %>">
 			</div>
 
 			<div class="form-group">
 				<label for="outrostart">Outro start time</label>
-				<input type="number" id="outrostart" placeholder="10">
+				<input type="number" id="outrostart" value="<%= meta.outrostart %>">
 			</div>
+
+			<button onclick="saveMetaData()" class="button primary padding-large margin-large">Save meta data</button>
 
 			<!-- Only usable with themoviedatabase plugin enabled -->
 			<div class="hide" id="tmdb">
-				<a onclick="initMetaImport()" href="#t">import metadata with imdb</a>
+
+				<div id="updated-notification" class="hide">
+					<a onclick="doSlideUp()" href="#top">
+						<div id="un-content" class="padding-medium margin-medium">
+							<h1>Imported! ↑</h1>
+						</div>
+					</a>
+				</div>
+
+				<a onclick="initMetaImport()" style="cursor: pointer;" >import metadata with tmdb</a>
 				<div class="hide" id="metaImport">
 					<input type="search" id="searchUrl">
 					<button onclick="searchMeta()" class="button primary padding-medium">Search</button>
