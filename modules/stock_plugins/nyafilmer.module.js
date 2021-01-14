@@ -1,9 +1,9 @@
 const router = require("express").Router()
-const { fstat } = require("fs")
 const request = require("request")
+const puppeteer = require('puppeteer');
 
 //https://nyafilmer.vip/list/test/
-router.get("/nyafilmer",(req,res) => {
+router.get("/nyafilmer", (req,res) => {
 	if(!req.session.user) return res.redirect("/")
 	if(!req.query.q) return res.status(400).send("no query")
 
@@ -13,15 +13,25 @@ router.get("/nyafilmer",(req,res) => {
 	})
 })
 
-// resolving the url will be quirky. They have obfuscated it it seems
-router.get("/nyafilmer/resolveurl",(req,res) => {
+/*
+Nyafilmer has obfuscated their code (cringe). I will run it in a browser and get its output
+(this is ram heavy and will maybe not run anywhere but it works)
+*/
+router.get("/nyafilmer/resolveurl", async (req,res) => {
 	if(!req.session.user) return res.redirect("/")
 	if(!req.query.u) return res.status(400).send("no query")
 
-	request(`https://nyafilmer.vip${req.query.u}`,(err, result, body) => {
-		if(err) return res.status(h.http_codes.Internal_error).send(err)
-		res.send("ss")
-	})
+	const browser = await puppeteer.launch();
+	const page = await browser.newPage();
+	await page.emulate(puppeteer.devices["iPad"])
+	await page.setViewport({ width: 1920, height: 1080 });
+
+	await page.goto(`https://nyafilmer.vip${req.query.u}`);
+	await page.waitForSelector("#postContent > iframe")
+	const data = await page.evaluate(() => document.querySelector('#postContent > iframe').getAttribute("src"));
+	page.close()
+
+	res.send(data)
 })
 
 const run = () => {
