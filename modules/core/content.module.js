@@ -112,6 +112,13 @@ router.delete("/:id",(req,res) => {
 	res.send("deleted")
 })
 
+router.get("/watch",(req,res) => {
+	if(!req.session.user) return res.redirect("/")
+	const { v, extern } = req.query
+	if(!v && !extern) return res.status(h.http_codes.Bad_Request).send("query param v or extern missing")
+	res.render("watch", {v,extern})
+})
+
 const run = () => {
 	process.armadillo.app.use(router)
 }

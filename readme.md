@@ -6,8 +6,11 @@ The name was picked because I think armadillos are pretty cool looking
 
 
 ## todo
-- [ ] Secure user login
-- [ ] nyafilmer movie scraper
+- [X] Secure user login
+- [X] nyafilmer movie scraper
+- [X] nyafilmer series scraper
+- [ ] local videos
+- [ ] track watchtime on local videos
 
 ---
 If you find any issues with the code open an issue [**HERE**](https://github.com/ffamilyfriendly/Armadillo/issues)

@@ -20,3 +20,54 @@ body, html {
 #mainbar {
 	width: 100%;
 }
+
+#modal-container {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.37);
+}
+
+#postTabs_ul {
+	border-bottom: 2px solid black;
+}
+
+#postTabs_ul a {
+	color: inherit;
+}
+
+.btn-close {
+	background-color: transparent;
+	padding: 0.1em;
+	cursor: pointer;
+	color: white;
+	border: none;
+	font-size: 2em;
+}
+
+.active {
+	color: gold !important;
+	font-weight: bold;
+}
+
+.active li a {
+	font-weight: normal;
+}
+
+.season_ul {
+	list-style: none;
+}
+
+.season_ul li {
+	text-align: center;
+}
+
+.season_ul li a {
+	text-decoration: none;
+	color: white;
+}

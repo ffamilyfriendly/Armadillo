@@ -4,7 +4,61 @@ const resolveNfUrl = (url) => {
 	fetch(`/nyafilmer/resolveurl?u=${url}`, { method:"GET" })
 	.then(p => p.text())
 	.then(u => {
-		console.log(u)
+		location.href = `/watch?extern=${u}`
+	})
+}
+
+/**
+ * 
+ * @param {Element} e 
+ */
+const seasonItemOnclick = (e) => {
+	const vid = e.getAttribute("vid")
+
+	const oldActive = document.querySelector("a.active")
+	oldActive.classList.remove("active")
+	e.classList.add("active")
+	const old_vid = oldActive.getAttribute("vid")
+
+	document.querySelector(`ul[sid="${old_vid}"]`).style.display = "none"
+	document.querySelector(`ul[sid="${vid}"]`).style.display = "inherit"
+
+	console.log(vid)
+}
+
+const fixLinkThing = (e) => {
+	e.preventDefault()
+	resolveNfUrl(e.target.pathname)
+}
+
+const doModal = (c) => {
+	const mContainer = document.createElement("div")
+	mContainer.id = "modal-container"
+	document.body.appendChild(mContainer)
+
+	const container = document.createElement("div")
+	const closeBtn = document.createElement("button")
+	closeBtn.classList = "btn-close"
+	closeBtn.innerText = "x"
+	closeBtn.onclick = () => { mContainer.remove() }
+
+	container.id = "m-inner"
+	container.classList = "surface padding-large"
+	container.innerHTML = c
+	container.prepend(closeBtn)
+	mContainer.appendChild(container)
+
+	document.querySelectorAll("a.open_season").forEach(s => s.addEventListener("click",() => {seasonItemOnclick(s)}))
+	document.querySelectorAll("a.postTabsLinks").forEach(l => l.addEventListener("click",fixLinkThing))
+}
+
+const resolveTitle = (link) => {
+	fetch(`/nyafilmer/scrape?u=${link}`)
+	.then(p => p.text())
+	.then(d => {
+		if(!d.includes("Season List")) return resolveNfUrl(link)
+		const content = d.split("Season List</h3>")[1].split("<script>")[0]
+		doModal(content)
 	})
 }
 
@@ -21,7 +75,7 @@ const doNfSearch = () => {
 		
 		res.forEach(m => {
 			const r = document.createElement("div")
-			r.onclick = () => { resolveNfUrl(m.link) }
+			r.onclick = () => { resolveTitle(m.link) }
 			r.classList = "surface content"
 			r.innerHTML += `<img src="https://nyafilmer.vip${m.image}">`
 			r.innerHTML += `
@@ -46,6 +100,8 @@ const doNfSearch = () => {
 const doSearch = () => {
 	const query = document.getElementById("searchbar").value
 	const c = document.getElementById("sRes")
+
+	c.innerHTML = ""
 
 	fetch(`/search?q=${query}`,{ method:"GET" })
 	.then(p => p.text())

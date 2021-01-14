@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Armadillo / Watch</title>
+	<link href="/static/css/main.css" rel="stylesheet">
+	<link href="/static/css/watch.css" rel="stylesheet">
+	<script src="/static/js/watch.js"></script>
+	<% if(!extern) { %>
+		<script src="/static/js/watchtime.js"></script>
+	<% } %>
+</head>
+<body>
+	<div class="container">
+		<h1>These are the backend plugins currently loaded</h1>
+		<% if(extern) { %>
+			<iframe class="player" src="<%= extern %>"></iframe>
+		<% } else { %>
+
+		<% } %>
+	</div>
+	<div class="sticky-bottom footer primary padding-medium"> 
+		<div class="container">
+			<h3>Enabling/disabling plugins</h3>
+			<p>To enable or disable a plugin set the "enabled" bool in the module.js file to either true or false</p>
+		</div>
+	</div>
+</body>
+</html>
