@@ -6,11 +6,18 @@
 	<title>Armadillo / Settings</title>
 	<link href="/static/css/main.css" rel="stylesheet">
 	<script src="/static/js/main.js"></script>
+	<link href="/static/css/search.css" rel="stylesheet">
+	<link href="/static/css/browse.css" rel="stylesheet">
 	<script src="/static/js/search.js"></script>
 </head>
 <body>
-	<div class="container">
+	<div id="mainSearch">
+		<div id="mainbar" class="surface">
+			<div><input id="searchbar" type="text"> <button onclick="doSearch()">Search</button></div>
+			<div class="margin-large" id="sRes">
 
+			</div>
+		</div>
 	</div>
 	<div class="sticky-bottom footer primary padding-medium"> 
 		<div class="container">

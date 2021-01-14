@@ -7,14 +7,25 @@ router.get("/plugins.json",(req,res) => {
 	res.send(process.armadillo.plugins)
 })
 
+router.get("/search", (req,res) => {
+	if(!req.session.user) return res.redirect("/")
+
+	if(!req.query.q) {
+		res.sendFile(path.join(__dirname,"../../front/search.html"))
+	} else {
+		const f = `%${req.query.q}%`
+		db.all(`SELECT * FROM content WHERE displayname LIKE ? AND type = "movie"`,[f], (err1,rows1) => {
+			if(err1) return res.status(h.http_codes.Internal_error).send(err1)
+			res.send(rows1)
+		})
+	}
+})
+
+
 router.get("/browse/:id", (req,res) => {
 	if(!req.session.user) return res.redirect("/")
 	const id = req.params.id
 	res.render("browse", {me:req.session.user, id})
-})
-
-router.get("/search", (req,res) => {
-	res.sendFile(path.join(__dirname,"../../front/search.html"))
 })
 
 router.get("/:id/new", (req,res) => {
@@ -83,6 +94,15 @@ router.post("/:id/meta", (req,res) => {
 		if(err) return res.status(h.http_codes.Internal_error).send(err)
 		else res.send("updated")
 	})
+})
+
+router.post("/:id/setParent",(req,res) => {
+	const itemId = req.params.id
+	const parentId = req.query.id
+	if(!req.session.user || !req.session.user.admin) return res.status(h.http_codes.Unauthorized).redirect("/")
+	if(!parentId) return res.status(h.http_codes.Bad_Request).send("no parent id!")
+	db.run("UPDATE content SET parent = ? WHERE id = ?",[parentId,itemId])
+	res.send("Done!")
 })
 
 router.delete("/:id",(req,res) => {

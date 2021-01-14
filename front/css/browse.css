@@ -34,6 +34,31 @@
 
 .godly {
 	background-color: gold;
+	box-shadow: gold 0px 5px 15px;
+}
+
+.movie::after {
+	content: "movie";
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+.category::after {
+	content: "category";
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+.category .rating-container {
+	display: none;
+}
+
+#pasteThingie {
+	position: fixed;
+	bottom: 0;
+	right: 0;
 }
 
 .content img {
