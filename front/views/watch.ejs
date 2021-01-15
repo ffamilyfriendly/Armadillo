@@ -7,23 +7,39 @@
 	<link href="/static/css/main.css" rel="stylesheet">
 	<link href="/static/css/watch.css" rel="stylesheet">
 	<script src="/static/js/watch.js"></script>
-	<% if(!extern) { %>
-		<script src="/static/js/watchtime.js"></script>
-	<% } %>
 </head>
 <body>
-	<div class="container">
-		<h1>These are the backend plugins currently loaded</h1>
-		<% if(extern) { %>
-			<iframe class="player" src="<%= extern %>"></iframe>
-		<% } else { %>
+	<input type="hidden" id="id" value="<%= v %>">
 
-		<% } %>
-	</div>
-	<div class="sticky-bottom footer primary padding-medium"> 
+	<% if(extern) { %>
+		<iframe allowfullscreen="" class="player" src="<%= extern %>"></iframe>
+	<% } else { %>
+		<video class="player" controls>
+			<source src="/media/<%= cookie %>/<%= v %>">
+		</video>
+	<% } %>
+
+	<div id="has-watched" class="footer hide primary sticky-bottom padding-medium"> 
 		<div class="container">
-			<h3>Enabling/disabling plugins</h3>
-			<p>To enable or disable a plugin set the "enabled" bool in the module.js file to either true or false</p>
+			<h1>You've watched this before. <a id="resumebtn">resume?</a></h1>
+			<div id="closebtn">
+				<a>x</a>
+			</div>
+		</div>
+	</div>
+
+	<div id="end-movie" class="footer hide primary sticky-bottom padding-medium"> 
+		<div class="container">
+			<h1>Next up "<span id="next-up-name">movie name</span>".</h1>
+		</div>
+	</div>
+
+	<div class="footer surface padding-medium"> 
+		<div class="container">
+			<a class="margin-medium" onclick="history.back()" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z"/></svg></a>
+			<div id="container-pp">
+				<h1>Test</h1>
+			</div>
 		</div>
 	</div>
 </body>

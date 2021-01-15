@@ -2,6 +2,7 @@ const router = require("express").Router()
 const path = require("path")
 const db = require("./database.module").db
 const h = require("./helpers")
+const store = require("../../index").store
 
 router.get("/plugins.json",(req,res) => {
 	res.send(process.armadillo.plugins)
@@ -78,6 +79,14 @@ router.get("/:id/content", (req,res) => {
 	})
 })
 
+router.get("/:id/media",(req,res) => {
+	if(!req.session.user) return res.status(h.http_codes.Unauthorized).send("cringe")
+	db.all("SELECT * FROM content WHERE id = ?",[req.params.id],(err, row) => {
+		if(err) return res.status(h.http_codes.Internal_error).send(err)
+		else res.send(row[0])
+	})
+})
+
 router.get("/:id/meta", (req,res) => {
 	if(!req.session.user) return res.status(h.http_codes.Unauthorized).send("cringe")
 	db.all("SELECT * FROM meta WHERE id = ?",[req.params.id],(err, row) => {
@@ -116,7 +125,41 @@ router.get("/watch",(req,res) => {
 	if(!req.session.user) return res.redirect("/")
 	const { v, extern } = req.query
 	if(!v && !extern) return res.status(h.http_codes.Bad_Request).send("query param v or extern missing")
-	res.render("watch", {v,extern})
+	res.render("watch", {v,extern,cookie:req.sessionID})
+})
+
+router.get("/media/:cookie/:id", (req,res) => {
+	const { cookie, id } = req.params
+
+	store.get(cookie, (err,sess) => {
+		if(!sess) return res.status(h.http_codes.Unauthorized).send("no")
+
+		db.all("SELECT * FROM content WHERE id = ?",[id],(err,rows) => {
+			if(err) return res.status(h.http_codes.Internal_error).send(err)
+			if(rows[0]) {
+				res.sendFile(rows[0].path)
+			} else return res.status(h.http_codes.Not_Found).send("not found")
+		})
+	})
+})
+
+router.get("/:id/timestamp", (req,res) => {
+	if(!req.session.user) return res.redirect("/")
+	db.all("SELECT * FROM watching WHERE id = ? AND user = ?",[req.params.id,req.session.user.id],(err,data) => {
+		if(err) return res.status(h.http_codes.Internal_error).send(err)
+		else return res.send(data[0])
+	})
+})
+
+router.post("/:id/timestamp", (req,res) => {
+	if(!req.session.user) return res.redirect("/")
+	const {time,max} = req.body
+	if(!time || !max) return res.status(h.http_codes.Bad_Request).send("missing time or max in body")
+
+	db.run("INSERT OR REPLACE INTO watching VALUES(?,?,?,?,?)",[req.params.id,req.session.user.id,time,max,`${req.session.user.id}/${req.params.id}`], (err) => {
+		if(err) return res.status(h.http_codes.Internal_error).send(err)
+		else res.send("noted")
+	})
 })
 
 const run = () => {

@@ -59,6 +59,18 @@ const copyItem = (iId) => {
 	localStorage.setItem("copy",iId)
 }
 
+const doHasWatched = (id,e) => {
+	fetch(`/${id}/timestamp`)
+	.then(p => p.text())
+	.then(d => {
+		if(!d) return
+		d = JSON.parse(d)
+		const percentWatched = (d.time / d.max) * 100
+		console.log(percentWatched)
+		e.innerHTML += `<div class="pbar-outer"> <div class="pbar-inner" style="width:${percentWatched}%" > </div> </div>`
+	})
+}
+
 const doContent = (cc) => {
 	const mContainer = document.getElementById("filmContainer")
 	cc.forEach(c => {
@@ -78,6 +90,7 @@ const doContent = (cc) => {
 		}
 
 		mContainer.appendChild(container)
+		if(c.type === "movie") doHasWatched(c.id,container)
 		if(c.hasmeta) doMeta(container, c.id)
 	})
 }

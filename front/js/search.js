@@ -1,6 +1,10 @@
 let nf = false
 
+let cached = {}
+
 const resolveNfUrl = (url) => {
+	localStorage.setItem("nyafilmer", JSON.stringify(cached[url]))
+
 	fetch(`/nyafilmer/resolveurl?u=${url}`, { method:"GET" })
 	.then(p => p.text())
 	.then(u => {
@@ -64,7 +68,7 @@ const resolveTitle = (link) => {
 
 const doNfSearch = () => {
 	if(!nf) return
-
+	
 	const query = document.getElementById("searchbar").value
 	const c = document.getElementById("sRes")
 
@@ -72,7 +76,7 @@ const doNfSearch = () => {
 	.then(p => p.text())
 	.then(res => {
 		res = JSON.parse(res)
-		
+
 		res.forEach(m => {
 			const r = document.createElement("div")
 			r.onclick = () => { resolveTitle(m.link) }
@@ -90,6 +94,8 @@ const doNfSearch = () => {
 			if(m.imdb > 5) rLvl = "meh"
 			if(m.imdb > 7) rLvl = "good"
 			if(m.imdb > 9) rLvl = "godly"
+
+			cached[m.link] = m
 	
 			r.innerHTML += `<div class="padding-large rating-container"><div class="padding-large rating ${rLvl}"><b>${m.imdb}</b>/10</div></div>`
 			c.appendChild(r)
@@ -108,6 +114,7 @@ const doSearch = () => {
 	.then(d => {
 		d = JSON.parse(d)
 		d.forEach(res => {
+			
 			const r = document.createElement("div")
 			r.classList = "surface content"
 			r.onclick = () => { location.href = `/watch?v=${res.id}` }

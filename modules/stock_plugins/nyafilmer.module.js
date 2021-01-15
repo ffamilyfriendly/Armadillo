@@ -58,8 +58,8 @@ module.exports = {
 	enabled:true,
 	loadorder:100,
 	meta: {
-		name:"Nya filmer scraper (experimental)",
-		description:"scrapes nya filmer for films",
+		name:"Nya filmer scraper",
+		description:"scrapes nya filmer for films (experimental)",
 		version:[1,0,0],
 		github:"https://github.com/ffamilyfriendly/Armadillo/blob/master/modules/stock_plugins/pluginList.module.js"
 	}

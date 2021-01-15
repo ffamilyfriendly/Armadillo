@@ -45,7 +45,7 @@ const run = () => {
 			outrostart INTEGER
 		);`)
 
-		db.run("CREATE TABLE IF NOT EXISTS watching (id TEXT, user TEXT, time INTEGER, max INTEGER)")
+		db.run("CREATE TABLE IF NOT EXISTS watching (id TEXT, user TEXT, time INTEGER, max INTEGER, uniquekey TEXT PRIMARY KEY)")
 	})
 }
 
