@@ -61,7 +61,7 @@ const resolveTitle = (link) => {
 	.then(p => p.text())
 	.then(d => {
 		if(!d.includes("Season List")) return resolveNfUrl(link)
-		const content = d.split("Season List</h3>")[1].split("<script>")[0]
+		const content = d.split("Season List</h3>")[1].split("<script")[0]
 		doModal(content)
 	})
 }
