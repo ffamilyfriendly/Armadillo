@@ -41,11 +41,22 @@ router.get("/", (req,res) => {
 
 router.post("/register", (req,res) => {
 	if(!req.session.user) res.redirect("/")
-	if(!req.session.user.admin) res.status(http_codes.Forbidden).send("no registration allowed")
+	if(!req.session.user.admin) return res.status(http_codes.Forbidden).send("no registration allowed")
 	const {password, username} = req.body
 	if(!password || !username) return res.status(http_codes.Bad_Request).send("no password or username")
 	generateUser(username,password)
 	res.send("created!")
+})
+
+router.delete("/user/:id", (req,res) => {
+	if(!req.session.user) res.redirect("/")
+	if(!req.session.user.admin) return res.status(http_codes.Forbidden).send("bad")
+	if(req.params.id == "admin") return res.status(http_codes.Forbidden).send("can not remove admin")
+
+	db.run("DELETE FROM users WHERE id = ?",[req.params.id], (err) => {
+		if(err) {console.error(err); return res.status(http_codes.Internal_error).send(err)}
+		else return res.status(http_codes.OK).send("done")
+	})
 })
 
 router.get("/me", (req,res) => {

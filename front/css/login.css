@@ -37,4 +37,8 @@ body,html {
 	.profile {
 		display: block;
 	}
+
+	#profiles {
+		height: 100%;
+	} 
 }

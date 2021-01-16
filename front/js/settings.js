@@ -28,6 +28,17 @@ const doChangePass = (e) => {
 
 }
 
+const deleteUser = () => {
+	const username = document.getElementById("del_uusername").value
+	if(!username || username === "admin") return
+
+	fetch(`/user/${username}`, { method:"DELETE" } )
+	.then(p => {
+		if(p.ok) alert("account deleted")
+		else alert("account not deleted")
+	})
+}
+
 const registerUser = () => {
 	const password = document.getElementById("new_upassword").value
 	const username = document.getElementById("new_uusername").value
