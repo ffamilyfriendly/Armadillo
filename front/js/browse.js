@@ -105,7 +105,7 @@ const insertContent = () => {
 	} )
 }
 
-window.armadillo.onPluginsLoaded = insertContent()
+window.armadillo.onPluginsLoaded = () => { insertContent() }
 
 document.addEventListener("DOMContentLoaded", () =>  {
 	id = document.getElementById("id").value
