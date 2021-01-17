@@ -4,6 +4,15 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Armadillo / Watch</title>
+
+	<script>
+		console.clear = () => {  }
+
+		window.open = () => {
+			console.log("no")
+		}
+	</script>
+
 	<link href="/static/css/main.css" rel="stylesheet">
 	<link href="/static/css/watch.css" rel="stylesheet">
 	<script src="/static/js/watch.js"></script>
@@ -12,7 +21,8 @@
 	<input type="hidden" id="id" value="<%= v %>">
 
 	<% if(extern) { %>
-		<iframe allowfullscreen="" class="player" src="<%= extern %>"></iframe>
+		<!-- remove any intrusive and annoying popups with sandbox -->
+		<iframe sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allowfullscreen="" class="player" src="<%= extern %>"></iframe>
 	<% } else { %>
 		<video class="player" controls>
 			<source src="/media/<%= cookie %>/<%= v %>">

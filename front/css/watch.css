@@ -55,6 +55,10 @@ body, html {
 	animation-duration: 1s;
 }
 
+a[href="#"] {
+	display: none;
+}
+
 @keyframes slideUp {
 	0% { transform: translate(0,150%); }
 	100% { transform: translate(0,0%); }
