@@ -22,7 +22,7 @@ const doMeta = (el, id) => {
 		}
 
 		if(meta.fullname) {
-			mC.getElementsByTagName("h1")[0].innerText = meta.fullname
+			mC.querySelector("h1").innerText = meta.fullname
 		}
 	
 		mC.innerHTML += `<p>${meta.description}</p>`
