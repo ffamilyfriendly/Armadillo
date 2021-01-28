@@ -3,13 +3,41 @@ let nf = false
 let cached = {}
 
 const resolveNfUrl = (url) => {
+	document.getElementById("loadingNF").classList.remove("hide")
 	localStorage.setItem("nyafilmer", JSON.stringify(cached[url]))
+	const socketProtocol = (location.protocol === 'https:' ? 'wss:' : 'ws:')
+	let socket = new WebSocket(`${socketProtocol}//${location.host}`);
+	socket.onopen = () => {
+		console.log("[SOCKET] established connection!")
+		socket.send(JSON.stringify({type:"add", data:url, user:window.armadillo.user.id}))
+	}
 
-	fetch(`/nyafilmer/resolveurl?u=${url}`, { method:"GET" })
-	.then(p => p.text())
-	.then(u => {
-		location.href = `/watch?extern=${u}`
-	})
+	socket.onmessage = (e) => {
+		const d = JSON.parse(e.data)
+		if(d.type == "DONE") {
+			document.getElementById("status").innerText = "redirecting..."
+			location.href = `/watch?extern=${d.data}`
+		}
+		if(d.type == "error") {
+			document.getElementById("status").innerText = d.data
+			document.querySelectorAll(".lds-facebook div").forEach(e => e.style.background = "var(--error)")
+			setTimeout(() => {
+				socket.close()
+				document.querySelectorAll(".lds-facebook div").forEach(e => e.style.background = "var(--primary)")
+			},5000)
+		}
+	}
+
+	socket.onclose = (e) => {
+		if(e.wasClean) console.log("[SOCKET] socket closed neatly")
+		else console.log("[SOCKET] socket closed badly")
+		document.getElementById("loadingNF").classList.add("hide")
+		socket.close()
+	}
+
+	socket.onerror = (err) => {
+		console.error(`[SOCKET] error`,err)
+	}
 }
 
 /**

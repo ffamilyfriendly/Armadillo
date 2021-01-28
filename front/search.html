@@ -11,6 +11,14 @@
 	<script src="/static/js/search.js"></script>
 </head>
 <body>
+	<div class="hide" id="loadingNF">
+		<div>
+			<h2 id="status" class="text-center">Processing...</h2>
+			<div id="status-anim">
+				<div id="anims" class="lds-facebook"><div></div><div></div><div></div></div>
+			</div>
+		</div>
+	</div>
 	<div id="mainSearch">
 		<div id="mainbar">
 			<div><input placeholder="Search for a movie or series" id="searchbar" type="text"> <button id="searchbutton" onclick="doSearch()">Search</button></div>

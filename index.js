@@ -25,7 +25,6 @@ app.set('view engine', 'ejs');
 app.set("views",require("path").join(__dirname,"./front/views"))
 
 process.armadillo.app = app
-module.exports = { store }
+process.armadillo.app.server = app.listen(process.armadillo.config.port, () => console.log(`Listening on port ${process.armadillo.config.port}`))
+module.exports = { store}
 getFiles("./modules").filter(m => m.endsWith(".module.js")).map(m => require(m)).sort((a,b) => a.loadorder - b.loadorder).forEach(_M => {_M.enabled ? _M.run() : null; process.armadillo.plugins.push(_M)})
-
-app.listen(process.armadillo.config.port, () => console.log(`Listening on port ${process.armadillo.config.port}`))

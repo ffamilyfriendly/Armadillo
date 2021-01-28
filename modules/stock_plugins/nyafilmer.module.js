@@ -1,6 +1,8 @@
 const router = require("express").Router()
 const request = require("request")
 const puppeteer = require('puppeteer');
+const ws = require("ws")
+const server = new ws.Server({ noServer: true })
 const { http_codes } = require("../core/helpers");
 
 //https://nyafilmer.vip/list/test/
@@ -22,35 +24,77 @@ router.get("/nyafilmer/scrape",(req,res) => {
 		if(err) return res.status(h.http_codes.Internal_error).send(err)
 		res.send(body)
 	})
-})
+}) 
 
-/*
-Nyafilmer has obfuscated their code (cringe). I will run it in a browser and get its output
-(this is ram heavy and will maybe not run anywhere but it works)
+
+/* 	Due to puppeteer taking a few seconds to
+*	process the request server might die
+*	if many requests are made at the same time,
+*	my solution to this is a queue system
 */
-router.get("/nyafilmer/resolveurl", async (req,res) => {
-	if(!req.session.user) return res.redirect("/")
-	if(!req.query.u) return res.status(400).send("no query")
+let queue = []
+server.on("connection", socket => {
+	socket.on("message", msg => {
+		try {
+			const data = JSON.parse(msg)
 
-	const browser = await puppeteer.launch();
-	const page = await browser.newPage();
-	await page.emulate(puppeteer.devices["iPad"])
-	await page.setViewport({ width: 1920, height: 1080 });
+			switch(data.type) {
+				case "add":
+					if(queue.filter(qi => qi.user == data.user).length > 0) return socket.send(JSON.stringify({type:"error",data:"you have already queued a link"}))
+					queue.push({user:data.user,url:data.data,socket})
+					if(queue.length == 1) doScrape()
+					socket.send(JSON.stringify({type:"OK",data:queue.length}))
+				break;
+				case "remove":
+					queue = queue.filter(qi => qi.user != data.user)
+					socket.send(JSON.stringify({type:"OK",data:queue.length}))
+				break;
+				default:
+					socket.send(JSON.stringify({type:"error",data:"what do you want? add <link> or remove"}))
+				break;
+			}
 
-	await page.goto(`https://nyafilmer.vip${req.query.u}`);
-	await page.waitForSelector("#postContent > iframe")
-	.catch(err => {
-		console.err(err)
-		return res.status(http_codes.Internal_error).send("could not fetch media")
+		} catch(err) {
+			socket.send(JSON.stringify({type:"error",data:"could not parse request"}))
+		}
 	})
-	const data = await page.evaluate(() => document.querySelector('#postContent > iframe').getAttribute("src"));
-	page.close()
-
-	res.send(data)
 })
+
+
+
+const doScrape = async () => {
+	const s = queue[0]
+	if(!s) return
+	try {
+		const browser = await puppeteer.launch()
+		const page = await browser.newPage()
+		await page.emulate(puppeteer.devices["iPad"])
+		await page.setViewport({ width: 1920, height: 1080 });
+		await page.goto(`https://nyafilmer.vip${s.url}`);
+		await page.waitForSelector("#postContent > iframe")
+	
+		const data = await page.evaluate(() => document.querySelector('#postContent > iframe').getAttribute("src"))
+		page.close()
+		queue.shift()
+		s.socket.send(JSON.stringify({type:"DONE",data:data}))
+		server.clients.forEach(c => c.send(JSON.stringify({type:"QUPDATE",data:queue})))
+
+	} catch(err) {
+		console.error(err)
+		queue.shift()
+		s.socket.send(JSON.stringify({type:"error",data:err}))
+		server.clients.forEach(c => c.send(JSON.stringify({type:"QUPDATE",data:queue})))
+		return doScrape()
+	}
+}
 
 const run = () => {
 	process.armadillo.app.use(router)
+	process.armadillo.app.server.on('upgrade', (request, socket, head) => {
+		server.handleUpgrade(request, socket, head, socket => {
+		  server.emit('connection', socket, request);
+		});
+	})
 }
 
 module.exports = {
