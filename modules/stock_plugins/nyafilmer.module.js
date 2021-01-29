@@ -75,17 +75,15 @@ const doScrape = async () => {
 	
 		const data = await page.evaluate(() => document.querySelector('#postContent > iframe').getAttribute("src"))
 		page.close()
-		queue.shift()
 		s.socket.send(JSON.stringify({type:"DONE",data:data}))
-		server.clients.forEach(c => c.send(JSON.stringify({type:"QUPDATE",data:queue})))
-
 	} catch(err) {
 		console.error(err)
-		queue.shift()
 		s.socket.send(JSON.stringify({type:"error",data:err}))
-		server.clients.forEach(c => c.send(JSON.stringify({type:"QUPDATE",data:queue})))
-		return doScrape()
 	}
+
+	queue.shift()
+	server.clients.forEach(c => c.send(JSON.stringify({type:"QUPDATE",data:queue})))
+	return doScrape()
 }
 
 const run = () => {
