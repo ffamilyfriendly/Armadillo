@@ -74,7 +74,8 @@ const doScrape = async () => {
 		await page.waitForSelector("#postContent > iframe")
 	
 		const data = await page.evaluate(() => document.querySelector('#postContent > iframe').getAttribute("src"))
-		page.close()
+		await page.close()
+		browser.close()
 		s.socket.send(JSON.stringify({type:"DONE",data:data}))
 	} catch(err) {
 		console.error(err)

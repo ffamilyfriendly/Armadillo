@@ -14,6 +14,7 @@ const resolveNfUrl = (url) => {
 
 	socket.onmessage = (e) => {
 		const d = JSON.parse(e.data)
+		console.log(d)
 		if(d.type == "DONE") {
 			document.getElementById("status").innerText = "redirecting..."
 			location.href = `/watch?extern=${d.data}`
@@ -25,6 +26,20 @@ const resolveNfUrl = (url) => {
 				socket.close()
 				document.querySelectorAll(".lds-facebook div").forEach(e => e.style.background = "var(--primary)")
 			},5000)
+		}
+
+		if(d.type == "OK") document.getElementById("status").innerText = d.data == 1 ? "Processing..." : `You are in queue position ${d.data - 1}...`
+
+		if(d.type == "QUPDATE") {
+			const q = d.data
+			let qPos = 0;
+			for(let i = 0; i < q.length; i++) {
+				if(q[i].user == window.armadillo.user.id) {
+					qPos = i
+					break;
+				}
+			}
+			document.getElementById("status").innerText = qPos == 0 ? "Processing..." : `You are in queue position ${qPos}...`
 		}
 	}
 
