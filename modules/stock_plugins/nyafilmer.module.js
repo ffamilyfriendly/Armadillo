@@ -67,14 +67,13 @@ server.on("connection", socket => {
 const doScrape = async () => {
 	const s = queue[0]
 	if(!s) return
+	const browser = await puppeteer.launch()
+	const page = await browser.newPage()
 	try {
-		const browser = await puppeteer.launch()
-		const page = await browser.newPage()
 		await page.emulate(puppeteer.devices["iPad"])
 		await page.setViewport({ width: 1920, height: 1080 });
 		await page.goto(`${apiUrl}${s.url}`);
-		await page.waitForSelector("#postContent > iframe")
-	
+		await page.waitForSelector("#postContent > iframe")	
 		const data = await page.evaluate(() => document.querySelector('#postContent > iframe').getAttribute("src"))
 		s.socket.send(JSON.stringify({type:"DONE",data:data}))
 	} catch(err) {

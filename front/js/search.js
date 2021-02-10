@@ -1,6 +1,7 @@
 let nf = false
 
 let cached = {}
+let hasTriedFixQueue = false
 
 const resolveNfUrl = (url) => {
 	document.getElementById("loadingNF").classList.remove("hide")
@@ -20,6 +21,17 @@ const resolveNfUrl = (url) => {
 			location.href = `/watch?extern=${d.data}`
 		}
 		if(d.type == "error") {
+			if(d.data == "you have already queued a link") {
+				if(hasTriedFixQueue) {
+					document.getElementById("status").innerText = "Could not fix queue :("
+					document.querySelectorAll(".lds-facebook div").forEach(e => e.style.background = "var(--error)")
+					return
+				}
+				socket.send(JSON.stringify({type:"remove", user:window.armadillo.user.id}))
+				socket.send(JSON.stringify({type:"add", data:url, user:window.armadillo.user.id}))
+				return
+			}
+
 			document.getElementById("status").innerText = d.data
 			document.querySelectorAll(".lds-facebook div").forEach(e => e.style.background = "var(--error)")
 			setTimeout(() => {
@@ -110,6 +122,20 @@ const resolveTitle = (link) => {
 	})
 }
 
+/**
+ * 
+ * @param {HTMLImageElement} img 
+ */
+const waitForImgLoad = (img, parent) => {
+	const d = () => parent.classList.remove("skel","skel-content")
+
+	if(img.complete) return d()
+
+	img.addEventListener("load",d)
+
+	setTimeout(d,1000 * 10)
+}
+
 const doNfSearch = () => {
 	if(!nf) return
 	
@@ -130,8 +156,11 @@ const doNfSearch = () => {
 		res.forEach(m => {
 			const r = document.createElement("div")
 			r.onclick = () => { resolveTitle(m.link) }
-			r.classList = "surface content"
-			r.innerHTML += `<img src="${nf}/${m.image}">`
+			r.classList = "surface content skel skel-content"
+			const img = document.createElement("img")
+			img.src = `${nf}/${m.image}`
+			waitForImgLoad(img,r)
+			r.append(img)
 			r.innerHTML += `
 			<div class="padding-medium">
 				<h1>${m.title}</h1>
@@ -154,6 +183,7 @@ const doNfSearch = () => {
 }
 
 const doSearch = () => {
+	document.getElementById("sRes").innerHTML = ""
 	const cc = document.createElement("div")
 	cc.innerHTML = "<hr><div id=\"eRes\"><h2>Local content</h2></div><hr>"
 	const query = document.getElementById("searchbar").value
@@ -165,7 +195,7 @@ const doSearch = () => {
 		d.forEach(res => {
 			
 			const r = document.createElement("div")
-			r.classList = "surface content"
+			r.classList = "surface content skel skel-content"
 			r.onclick = () => { location.href = `/watch?v=${res.id}` }
 			if(res.hasmeta) {
 				fetch(`/${res.id}/meta`, { method:"GET" })
@@ -173,11 +203,15 @@ const doSearch = () => {
 				.then(mRes => {
 					mRes = JSON.parse(mRes)
 					if(mRes.thumbnail) {
-						r.innerHTML += `<img src="${mRes.thumbnail.startsWith("/") ? `https://image.tmdb.org/t/p/w500/${mRes.thumbnail}` : mRes.thumbnail}">`
+						const img = document.createElement("img")
+						img.src = `${mRes.thumbnail.startsWith("/") ? `https://image.tmdb.org/t/p/w500/${mRes.thumbnail}` : mRes.thumbnail}`
+						r.append(img)
+						waitForImgLoad(img,r)
 					}
 					r.innerHTML += `<div class="padding-medium"> <h1>${mRes.fullname != "" ? mRes.fullname : res.displayname}</h1> <p>${mRes.description}</p> </div>`
 				})
 			} else {
+				r.classList.remove("skel","skel-content")
 				r.innerHTML += `<div class="padding-medium"><h1>${res.displayname}</h1></div>`
 			}
 			cc.appendChild(r)

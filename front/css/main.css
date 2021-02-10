@@ -227,3 +227,41 @@ svg path {
 	0% { opacity: 1; }
 	100% { opacity: 0; }
 }
+
+/* Skeleton loading animation, courtesy of github@adel-sbeh  */
+.skel {
+    background: linear-gradient(90deg, rgb(41 41 41) 0%, rgb(80 80 80) 7%, rgb(53 53 53) 13%, rgb(33 33 33) 25%);
+    background-size: 900%;
+    background-position: 100% 0%;
+    animation: skeletonAnimation 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    color: transparent;
+}
+
+.skel * {
+    display: none !important;
+}
+
+@keyframes skeletonAnimation {
+    0% {
+        background-position: 100% 0%;
+    }
+    99.99% {
+        background-position: -30% 0%;
+    }
+    100% {
+        background-position: 100% 0%;
+    }
+}
+
+img.skel {
+	border: none;
+	width: 160px !important;
+	height: 240px !important;
+	display: inline-block;
+}
+
+.skel-content {
+	min-height: 10em;
+}

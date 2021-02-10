@@ -18,6 +18,7 @@ The name was picked because I think armadillos are pretty cool looking
 - Logo Vector by [Vecteezy](https://www.vecteezy.com/free-vector/animals)
 - Icons by [iconmonstr](https://iconmonstr.com/)
 - Metadata by [themoviedb](https://www.themoviedb.org/)
+- Skeleton loading animation by [EnderAdel](https://github.com/adel-sbeh) [(website)](https://endercomm.net/)
 
 ---
 If you find any issues with the code open an issue [**HERE**](https://github.com/ffamilyfriendly/Armadillo/issues)

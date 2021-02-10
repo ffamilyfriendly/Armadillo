@@ -5,8 +5,8 @@ let id = ""
  * @param {Element} el 
  * @param {*} id 
  */
-
 const doMeta = (el, id) => {
+	//container.classList.remove("skel","skel-content")
 	const mC = document.getElementById(id)
 
 	fetch(`/${id}/meta`, { method:"GET" })
@@ -16,8 +16,23 @@ const doMeta = (el, id) => {
 		console.log(meta)
 
 		if(meta.thumbnail) {
-			const img = document.createElement("img")
+			const img = document.querySelector("img")
 			img.setAttribute("src", meta.thumbnail.startsWith("/") ? `https://image.tmdb.org/t/p/w500/${meta.thumbnail}` : meta.thumbnail)
+			img.classList.remove("skel")
+
+			if(img.complete) {
+				el.classList.remove("skel","skel-content")
+			} else {
+				img.addEventListener("load", () => {
+					el.classList.remove("skel","skel-content")
+				})
+
+				setTimeout(() => {
+					el.classList.remove("skel","skel-content")
+				}, 1000 * 10)
+			}
+
+
 			el.prepend(img)
 		}
 	
@@ -77,7 +92,8 @@ const doContent = (cc) => {
 	const mContainer = document.getElementById("filmContainer")
 	cc.forEach(c => {
 		const container = document.createElement("div")
-		container.classList = `surface content padding-medium margin-medium ${c.type}`
+		container.innerHTML += `<img>`
+		container.classList = `surface content padding-medium margin-medium ${c.type} skel skel-content`
 		console.log(c)
 
 		container.onclick = () => { if(c.type === "movie") {location.href = `/watch?v=${c.id}`} else {location.href = `/browse/${c.id}`} }
@@ -92,8 +108,13 @@ const doContent = (cc) => {
 		}
 
 		mContainer.appendChild(container)
-		if(c.type === "movie") doHasWatched(c.id,container)
+		if(c.type === "movie") doHasWatched(c.id,container) 
+		else {container.classList.remove("skel","skel-content"); container.querySelector("img").remove()}
 		if(c.hasmeta) doMeta(container, c.id)
+		else {
+			container.querySelector("img").remove()
+			container.classList.remove("skel","skel-content")
+		}
 	})
 }
 
@@ -102,6 +123,7 @@ const insertContent = () => {
 	fetch(`/${id}/content`, { method:"GET" })
 	.then(r => r.text())
 	.then( text => {
+		document.getElementById("skeleteons").remove()
 		const cJSON = JSON.parse(text)
 		doContent(cJSON)
 	} )
