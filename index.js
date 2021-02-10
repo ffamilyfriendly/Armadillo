@@ -11,6 +11,10 @@ const express = require("express"),
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+app.get("/favicon.ico",(req,res) => {
+	res.sendFile(require("path").join(__dirname,"favicon.ico"))
+})
+
 app.use(cs({
     secret: process.armadillo.config.cookie_secret,
     resave: true,

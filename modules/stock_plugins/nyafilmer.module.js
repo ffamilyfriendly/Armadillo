@@ -12,7 +12,7 @@ router.get("/nyafilmer", (req,res) => {
 	if(!req.session.user) return res.redirect("/")
 	if(!req.query.q) return res.status(400).send("no query")
 
-	request(`${apiUrl}/ajax_list/${req.query.q}`, {timeout:2000},(err, result, body) => {
+	request(`${apiUrl}/ajax_list/${req.query.q}`, {timeout:5000},(err, result, body) => {
 		if(err) return res.status(http_codes.Internal_error).send(err)
 		res.send(body)
 	})
@@ -22,7 +22,7 @@ router.get("/nyafilmer/scrape",(req,res) => {
 	if(!req.session.user) return res.redirect("/")
 	if(!req.query.u) return res.status(400).send("no query")
 
-	request(`${apiUrl}/${req.query.u}`, {timeout:2000},(err, result, body) => {
+	request(`${apiUrl}/${req.query.u}`, {timeout:5000},(err, result, body) => {
 		if(err) return res.status(http_codes.Internal_error).send(err)
 		res.send(body)
 	})
@@ -72,17 +72,18 @@ const doScrape = async () => {
 		const page = await browser.newPage()
 		await page.emulate(puppeteer.devices["iPad"])
 		await page.setViewport({ width: 1920, height: 1080 });
-		await page.goto(`${apiUrl}/${s.url}`);
+		await page.goto(`${apiUrl}${s.url}`);
 		await page.waitForSelector("#postContent > iframe")
 	
 		const data = await page.evaluate(() => document.querySelector('#postContent > iframe').getAttribute("src"))
-		await page.close()
-		browser.close()
 		s.socket.send(JSON.stringify({type:"DONE",data:data}))
 	} catch(err) {
 		console.error(err)
-		s.socket.send(JSON.stringify({type:"error",data:err}))
+		s.socket.send(JSON.stringify({type:"error",data:{e:err,s:s,url:`${apiUrl}${s.url}`}}))
 	}
+
+	await page.close()
+	await browser.close()
 
 	queue.shift()
 	server.clients.forEach(c => c.send(JSON.stringify({type:"QUPDATE",data:queue})))
