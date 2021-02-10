@@ -5,13 +5,15 @@ const ws = require("ws")
 const server = new ws.Server({ noServer: true })
 const { http_codes } = require("../core/helpers");
 
+const apiUrl = "https://nyafilmer.app"
+
 //https://nyafilmer.vip/list/test/
 router.get("/nyafilmer", (req,res) => {
 	if(!req.session.user) return res.redirect("/")
 	if(!req.query.q) return res.status(400).send("no query")
 
-	request(`https://nyafilmer.vip/ajax_list/${req.query.q}`,(err, result, body) => {
-		if(err) return res.status(h.http_codes.Internal_error).send(err)
+	request(`${apiUrl}/ajax_list/${req.query.q}`, {timeout:2000},(err, result, body) => {
+		if(err) return res.status(http_codes.Internal_error).send(err)
 		res.send(body)
 	})
 })
@@ -20,8 +22,8 @@ router.get("/nyafilmer/scrape",(req,res) => {
 	if(!req.session.user) return res.redirect("/")
 	if(!req.query.u) return res.status(400).send("no query")
 
-	request(`https://nyafilmer.vip/${req.query.u}`,(err, result, body) => {
-		if(err) return res.status(h.http_codes.Internal_error).send(err)
+	request(`${apiUrl}/${req.query.u}`, {timeout:2000},(err, result, body) => {
+		if(err) return res.status(http_codes.Internal_error).send(err)
 		res.send(body)
 	})
 }) 
@@ -70,7 +72,7 @@ const doScrape = async () => {
 		const page = await browser.newPage()
 		await page.emulate(puppeteer.devices["iPad"])
 		await page.setViewport({ width: 1920, height: 1080 });
-		await page.goto(`https://nyafilmer.vip${s.url}`);
+		await page.goto(`${apiUrl}/${s.url}`);
 		await page.waitForSelector("#postContent > iframe")
 	
 		const data = await page.evaluate(() => document.querySelector('#postContent > iframe').getAttribute("src"))
@@ -88,6 +90,7 @@ const doScrape = async () => {
 }
 
 const run = () => {
+	module.exports.apiUrl = apiUrl
 	process.armadillo.app.use(router)
 	process.armadillo.app.server.on('upgrade', (request, socket, head) => {
 		server.handleUpgrade(request, socket, head, socket => {

@@ -20,10 +20,6 @@ const doMeta = (el, id) => {
 			img.setAttribute("src", meta.thumbnail.startsWith("/") ? `https://image.tmdb.org/t/p/w500/${meta.thumbnail}` : meta.thumbnail)
 			el.prepend(img)
 		}
-
-		if(meta.fullname) {
-			mC.querySelector("h1").innerText = meta.fullname
-		}
 	
 		mC.innerHTML += `<p>${meta.description}</p>`
 
@@ -34,6 +30,12 @@ const doMeta = (el, id) => {
 		if(meta.rating > 9) rLvl = "godly"
 
 		mC.innerHTML += `<div class="padding-large rating-container"><div class="padding-large rating ${rLvl}"><b>${meta.rating}</b>/10</div></div>`
+		
+		if(meta.fullname) {
+			mC.querySelector("h1").innerText = meta.fullname
+		}
+		
+		document.getElementById(id).innerHTML = mC.innerHTML
 	})
 }
 

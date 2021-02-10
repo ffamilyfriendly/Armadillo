@@ -113,18 +113,24 @@ const doNfSearch = () => {
 	if(!nf) return
 	
 	const query = document.getElementById("searchbar").value
-	const c = document.getElementById("sRes")
+	document.getElementById("sRes").innerHTML += "<hr><div id=\"nfRes\"><h2>Resultat från nyafilmer</h2></div><hr>"
+	const c = document.getElementById("nfRes")
 
 	fetch(`/nyafilmer?q=${query}`, { method:"GET" })
 	.then(p => p.text())
 	.then(res => {
 		res = JSON.parse(res)
 
+		if(res.code) {
+			c.innerHTML += `<div class="surface content"><div class="padding-medium border-error border-left border-medium"> <h1>Kunde inte söka filmer 😞</h1> <b>Felkod: </b>${res.code} </div></div>`
+			return
+		}
+
 		res.forEach(m => {
 			const r = document.createElement("div")
 			r.onclick = () => { resolveTitle(m.link) }
 			r.classList = "surface content"
-			r.innerHTML += `<img src="https://nyafilmer.vip${m.image}">`
+			r.innerHTML += `<img src="${nf}/${m.image}">`
 			r.innerHTML += `
 			<div class="padding-medium">
 				<h1>${m.title}</h1>
@@ -147,10 +153,9 @@ const doNfSearch = () => {
 }
 
 const doSearch = () => {
+	const cc = document.createElement("div")
+	cc.innerHTML = "<hr><div id=\"eRes\"><h2>Local content</h2></div><hr>"
 	const query = document.getElementById("searchbar").value
-	const c = document.getElementById("sRes")
-
-	c.innerHTML = ""
 
 	fetch(`/search?q=${query}`,{ method:"GET" })
 	.then(p => p.text())
@@ -169,21 +174,22 @@ const doSearch = () => {
 					if(mRes.thumbnail) {
 						r.innerHTML += `<img src="${mRes.thumbnail.startsWith("/") ? `https://image.tmdb.org/t/p/w500/${mRes.thumbnail}` : mRes.thumbnail}">`
 					}
-					r.innerHTML += `<div class="padding-medium"> <h1>${mRes.fullname||res.displayname}</h1> <p>${mRes.description}</p> </div>`
+					r.innerHTML += `<div class="padding-medium"> <h1>${mRes.fullname != "" ? mRes.fullname : res.displayname}</h1> <p>${mRes.description}</p> </div>`
 				})
 			} else {
 				r.innerHTML += `<div class="padding-medium"><h1>${res.displayname}</h1></div>`
 			}
-
-			c.appendChild(r)
+			cc.appendChild(r)
 		})
+		console.log(cc.innerHTML)
+		document.getElementById("sRes").prepend(cc)
 	})
-
+	
 	doNfSearch()
 }
 
 
 
 window.armadillo.onPluginsLoaded = () => {
-	nf = window.armadillo.plugins["Nya filmer scraper"] && window.armadillo.plugins["Nya filmer scraper"].enabled
+	nf = window.armadillo.plugins["Nya filmer scraper"] && window.armadillo.plugins["Nya filmer scraper"].enabled ? window.armadillo.plugins["Nya filmer scraper"].apiUrl : null
 }
