@@ -1,37 +1,34 @@
-## Welcome to GitHub Pages
+## Setup
+### Running
+1. git clone the repo - `git clone git@github.com:ffamilyfriendly/Armadillo.git .`
+2. install dependencies with `npm install`
+3. run code with `node .` (might want to configure port in config.js)
+4. log in to the website with the admin credentials provided in the console
 
-You can use the [editor on GitHub](https://github.com/ffamilyfriendly/Armadillo/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+### Adding users
+1. log in as admin
+2. click the cog in the bottom bar (or navigate to /settings)
+3. input desired username and password in "Create account" and click create
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Deleting users
+1. log in as admin
+2. click the cog in the bottom bar (or navigate to /settings)
+3. input username to delete in "delete account" and click delete
 
-### Markdown
+### Adding a category
+1. log in as admin
+2. click the "+" icon next to "Category:"
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### Editing a category
+1. log in as admin
+2. click the pen icon at the top right of the category
 
-```markdown
-Syntax highlighted code block
+### Moving a category
+1. log in as admin
+2. click the scissor icon at the top right of the category
+3. navigate to desired path
+4. click the paste icon in the bottom right
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ffamilyfriendly/Armadillo/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### Removing a category
+1. log in as admin
+2. click the trashbin icon at the top right of the category
