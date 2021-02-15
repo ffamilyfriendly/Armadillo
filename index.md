@@ -32,3 +32,6 @@
 ### Removing a category
 1. log in as admin
 2. click the trashbin icon at the top right of the category
+
+### Adding/editing/moving/removing a movie
+same procedure as category
