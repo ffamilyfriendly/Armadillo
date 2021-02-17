@@ -35,7 +35,7 @@ router.get("/:id/new", (req,res) => {
 	const type = req.query.type||"movie"
 
 	db.all("INSERT INTO content VALUES(?,?,?,?,?,?,?)",[rId,"displayname",type,req.params.id,"/","",0])
-	db.all("INSERT INTO meta VALUES(?,?,?,?,?,?,?,?)",[rId,"","description","",10,1,1,1])
+	db.all("INSERT INTO meta VALUES(?,?,?,?,?,?,?,?)",[rId,"","description","",10,-1,-1,-1])
 
 	res.redirect(`/${rId}/edit`)
 })

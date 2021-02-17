@@ -13,10 +13,9 @@ const doMeta = (el, id) => {
 	.then(p => p.text())
 	.then(meta => {
 		meta = JSON.parse(meta)
-		console.log(meta)
 
 		if(meta.thumbnail) {
-			const img = document.querySelector("img")
+			const img = document.getElementById(`img_${id}`)
 			img.setAttribute("src", meta.thumbnail.startsWith("/") ? `https://image.tmdb.org/t/p/w500/${meta.thumbnail}` : meta.thumbnail)
 			img.classList.remove("skel")
 
@@ -31,9 +30,6 @@ const doMeta = (el, id) => {
 					el.classList.remove("skel","skel-content")
 				}, 1000 * 10)
 			}
-
-
-			el.prepend(img)
 		}
 	
 		mC.innerHTML += `<p>${meta.description}</p>`
@@ -92,9 +88,8 @@ const doContent = (cc) => {
 	const mContainer = document.getElementById("filmContainer")
 	cc.forEach(c => {
 		const container = document.createElement("div")
-		container.innerHTML += `<img>`
+		container.innerHTML += `<img id="img_${c.id}">`
 		container.classList = `surface content padding-medium margin-medium ${c.type} skel skel-content`
-		console.log(c)
 
 		container.onclick = () => { if(c.type === "movie") {location.href = `/watch?v=${c.id}`} else {location.href = `/browse/${c.id}`} }
 
@@ -112,6 +107,7 @@ const doContent = (cc) => {
 		else {container.classList.remove("skel","skel-content"); container.querySelector("img").remove()}
 		if(c.hasmeta) doMeta(container, c.id)
 		else {
+			console.log("remove")
 			container.querySelector("img").remove()
 			container.classList.remove("skel","skel-content")
 		}
@@ -119,7 +115,6 @@ const doContent = (cc) => {
 }
 
 const insertContent = () => {
-	console.log(id)
 	fetch(`/${id}/content`, { method:"GET" })
 	.then(r => r.text())
 	.then( text => {
