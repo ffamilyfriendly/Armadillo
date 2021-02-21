@@ -24,9 +24,22 @@
 		<!-- remove any intrusive and annoying popups with sandbox -->
 		<iframe sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allowfullscreen="" class="player" src="<%= extern %>"></iframe>
 	<% } else { %>
-		<video class="player" controls>
-			<source src="/media/<%= cookie %>/<%= v %>">
-		</video>
+		<% if(type === "movie") { %>
+			<video class="player" controls>
+				<source src="/media/<%= cookie %>/<%= v %>">
+			</video>
+		<% } else if(type === "audio") { %>
+			<div id="ap_container">
+				<div id="ap" class="surface padding-large">
+					<img id="ap_img" src="https://www.shareicon.net/data/2015/08/01/78337_music_512x512.png">
+					<h1 id="ap_title">Title</h1>
+					<audio class="player" controls>
+						<source src="/media/<%= cookie %>/<%= v %>">
+					</audio>
+				</div>
+			</div>
+		<% } %>
+
 	<% } %>
 
 	<div id="has-watched" class="footer hide primary sticky-bottom padding-medium"> 

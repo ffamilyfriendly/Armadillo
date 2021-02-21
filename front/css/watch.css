@@ -2,11 +2,39 @@ body, html {
 	padding: 0;
 }
 
-.player {
+video.player {
 	width: 100%;
 	height: 100vh;
 	top: 0;
 	left: 0;
+}
+
+audio.player {
+	width: 100%;
+}
+
+#ap_container {
+	width: 100%;
+	height: 100vh;
+	align-items: center;
+	justify-content: center;
+	display: flex;
+}
+
+#ap {
+	width: 50%;
+	position: absolute;
+}
+
+#ap_img {
+	height: 10em;
+}
+
+#ap_title {
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	padding: 0.25em;
 }
 
 #thumbnail {
@@ -58,4 +86,11 @@ body, html {
 @keyframes slideUp {
 	0% { transform: translate(0,150%); }
 	100% { transform: translate(0,0%); }
+}
+
+@media only screen and (max-width: 546px) {
+	#ap {
+		width: 100%;
+		position: absolute;
+	}
 }

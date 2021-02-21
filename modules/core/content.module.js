@@ -123,9 +123,9 @@ router.delete("/:id",(req,res) => {
 
 router.get("/watch",(req,res) => {
 	if(!req.session.user) return res.redirect("/")
-	const { v, extern } = req.query
+	const { v, extern, type } = req.query
 	if(!v && !extern) return res.status(h.http_codes.Bad_Request).send("query param v or extern missing")
-	res.render("watch", {v,extern,cookie:req.sessionID})
+	res.render("watch", {v,extern,type,cookie:req.sessionID})
 })
 
 router.get("/media/:cookie/:id", (req,res) => {

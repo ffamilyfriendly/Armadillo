@@ -13,6 +13,8 @@ The name was picked because I think armadillos are pretty cool looking
 - [X] nyafilmer series scraper
 - [X] local videos
 - [X] track watchtime on local videos
+- [X] audio only support
+- [ ] transcoding
 
 ## Attributions
 - Logo Vector by [Vecteezy](https://www.vecteezy.com/free-vector/animals)

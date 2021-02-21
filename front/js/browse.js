@@ -91,7 +91,7 @@ const doContent = (cc) => {
 		container.innerHTML += `<img id="img_${c.id}">`
 		container.classList = `surface content padding-medium margin-medium ${c.type} skel skel-content`
 
-		container.onclick = () => { if(c.type === "movie") {location.href = `/watch?v=${c.id}`} else {location.href = `/browse/${c.id}`} }
+		container.onclick = () => { if(c.type !== "category") {location.href = `/watch?v=${c.id}&type=${c.type}`} else {location.href = `/browse/${c.id}`}}
 
 		container.innerHTML += `<div class="padding-medium" id="${c.id}"> <h1>${c.displayname}</h1> </div>`
 		if(window.armadillo.user.admin) {
@@ -103,12 +103,13 @@ const doContent = (cc) => {
 		}
 
 		mContainer.appendChild(container)
+		const imgT = container.querySelector("img")
 		if(c.type === "movie") doHasWatched(c.id,container) 
-		else {container.classList.remove("skel","skel-content"); container.querySelector("img").remove()}
+		else {container.classList.remove("skel","skel-content"); imgT.remove()}
 		if(c.hasmeta) doMeta(container, c.id)
 		else {
 			console.log("remove")
-			container.querySelector("img").remove()
+			imgT.remove()
 			container.classList.remove("skel","skel-content")
 		}
 	})
@@ -122,6 +123,10 @@ const insertContent = () => {
 		const cJSON = JSON.parse(text)
 		doContent(cJSON)
 	} )
+}
+
+const doNewModal = () => {
+	document.getElementById("newModal").classList.remove("hide")
 }
 
 window.armadillo.onPluginsLoaded = () => { insertContent() }

@@ -79,8 +79,9 @@ const getDataThing = () => {
 
 				movie = dd
 				console.log({movie_object:d,meta_object:dd})
+				if(player.nodeName === "AUDIO") doMeta()
 			})
-		}
+		} else if(player.nodeName === "AUDIO") doMeta()
 	})
 }
 
@@ -116,6 +117,18 @@ const doNotification = (notifName,showTime,requireAnswer) => {
 			notif.classList.add("hide")
 		},showTime)
 	} else return () => { notif.classList.add("hide") }
+}
+
+const doMeta = () => {
+	fetch(`/${id}/media`)
+	.then(d => d.text())
+	.then(data => {
+		data = JSON.parse(data)
+		document.getElementById("ap_title").innerText = data.displayname
+		if(movie && movie.thumbnail) {
+			document.getElementById("ap_img").setAttribute("src",movie.thumbnail)
+		}
+	})
 }
 
 document.addEventListener("DOMContentLoaded", () => {
