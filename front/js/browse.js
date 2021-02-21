@@ -104,7 +104,7 @@ const doContent = (cc) => {
 
 		mContainer.appendChild(container)
 		const imgT = container.querySelector("img")
-		if(c.type === "movie") doHasWatched(c.id,container) 
+		if(c.type !== "category") doHasWatched(c.id,container) 
 		else {container.classList.remove("skel","skel-content"); imgT.remove()}
 		if(c.hasmeta) doMeta(container, c.id)
 		else {
