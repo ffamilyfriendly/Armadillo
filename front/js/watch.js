@@ -144,9 +144,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	if(id) { extern = false; initTimestamp(); }
 	player = document.querySelector(".player")
 	console.log(`standalone?: ${isInStandaloneMode()}`)
-	if(isInStandaloneMode()) {
-		document.getElementById("isPwa").classList.remove("hide")
-	}
 })
 
 const checkIfDownloadable = () => {
