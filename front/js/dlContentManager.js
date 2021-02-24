@@ -48,8 +48,12 @@ request.onsuccess = function (event) {
 const saveToDb = (blob,name) => {
 	console.log(`[DLMANAGER] saving content with size ${Math.round(blob.size/1000)}kb as ${name}`)
 	let transaction = db.transaction(["offline"], "readwrite");
-	transaction.objectStore("offline").put(blob, `raw_${name}`)
-	console.log(transaction)
+	const upload = transaction.objectStore("offline").put(blob, `raw_${name}`)
+	upload.onsuccess = () => {
+		setTimeout(() => {
+			location.reload()
+		}, 1000 * 5)
+	}
 }
 
 const saveMetaToDb = (data,name) => {
@@ -131,14 +135,6 @@ const saveContent = (url,name) => {
 			saveToDb(blob,name);
 	}
 	}, false);
-
-	xhr.addEventListener("readystatechange", (ev) => {
-		if(xhr.readyState === xhr.DONE) {
-			setTimeout(() => {
-				location.reload()
-			},1000)
-		}
-	})
 
 	// Send XHR
 	xhr.send();
