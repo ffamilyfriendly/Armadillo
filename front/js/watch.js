@@ -172,7 +172,7 @@ const checkIfDownloadable = () => {
 					document.getElementById("size_f").innerText = `${(dat.size/1000000).toFixed(2)} mb`
 					navigator.storage.estimate().then(t => {
 						const sLeft = t.quota - t.usage
-						if(sLeft < dat.size) {
+						if(sLeft < dat.size && false) {
 							//not enough space!
 							dlarea.classList.add("error")
 							dlarea.innerHTML = `

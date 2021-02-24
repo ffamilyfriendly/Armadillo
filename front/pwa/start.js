@@ -6,6 +6,17 @@ const resolveRedir = (_url) => {
 	},1500)
 }
 
+let timesClicked = 0;
+
+const doDebug = () => {
+	if(timesClicked > 3) {
+		const dbug = localStorage.getItem("debug")
+		alert(dbug ? "de-activated debug mode" : "activated debug mode")
+		localStorage.setItem("debug",!dbug)
+	}
+	timesClicked++;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 	if(location.href.includes("start.html")) {
 		console.log("attempting ping...",`${location.protocol}//${location.host}/me`)

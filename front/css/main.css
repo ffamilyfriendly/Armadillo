@@ -265,3 +265,21 @@ img.skel {
 .skel-content {
 	min-height: 10em;
 }
+
+#debuglogs {
+	width: 100%;
+	min-height: 100vh;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	background-color: black;
+}
+
+#debugbtn {
+	position: fixed;
+	top: 0;
+	right: 0;
+	padding: 1em;
+	z-index: 99999999;
+}
