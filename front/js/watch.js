@@ -156,10 +156,20 @@ document.addEventListener("DOMContentLoaded", () => {
 //saveMetaToDb ( data, name )
 
 const initOfflineMeta = () => {
+
+	caches.open("armadillo").then(cache => {
+		cache.add(movie.thumbnail.startsWith("/") ? `https://image.tmdb.org/t/p/w500/${movie.thumbnail}` : movie.thumbnail)
+	})
+
 	fetch(`/${id}/timestamp`, { method:"GET" })
 	.then(d => d.text())
 	.then(t => {
-		t = JSON.parse(t)
+		try {
+			t = JSON.parse(t)
+		} catch(err) {
+			console.log(err)
+			t = null
+		}
 		saveMetaToDb({ stamp:t, meta:movie },movie.base.id)
 	})
 }

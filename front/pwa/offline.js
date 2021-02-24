@@ -6,6 +6,23 @@
 
 */
 
+let video = document.createElement("video")
+let mst
+
+const doVideoStuff = () => {
+	video = document.getElementById("mainVideo")
+
+	video.onplay = () => {
+		console.log("mst",mst)
+		if(mst.stamp && mst.stamp.time > 1) {
+			if(confirm(`do you want to continue where you last left off?`)) {
+				video.currentTime = mst.stamp.time
+			}
+		}
+		video.onplay = null
+	}
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 	setTimeout(() => {
 		const mlist = document.getElementById("movielist")
@@ -16,8 +33,21 @@ document.addEventListener("DOMContentLoaded", () => {
 				const mItem = document.createElement("div")
 				mItem.classList = "surface padding-medium margin-medium"
 				mItem.onclick = () => {
-					console.log(`[OFFLINE] playing content with id ${movie.id}`)
-					console.log(movie.getUrl())
+					const container = document.getElementById("player")
+					container.classList.remove("hide")
+
+					movie.getUrl()
+					.then(u => {
+						container.innerHTML = `
+							<video id="mainVideo" class="surface" controls>
+								<source src="${u}">
+							</video>
+						`
+						movie.meta().then(m => {
+							mst = m
+							doVideoStuff()
+						})
+					})
 				}
 				movie.meta()
 				.then(m => {

@@ -84,6 +84,17 @@ audio.player {
 	animation-duration: 1s;
 }
 
+#isPwa {
+	width: 100%;
+	position: relative;
+}
+
+#isPwa_progress {
+	height: 0.3em;
+	background-color: green;
+	transition: 1s;
+}
+
 @keyframes slideUp {
 	0% { transform: translate(0,150%); }
 	100% { transform: translate(0,0%); }
