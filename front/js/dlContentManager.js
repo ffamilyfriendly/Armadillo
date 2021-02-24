@@ -48,32 +48,14 @@ request.onsuccess = function (event) {
 const saveToDb = (blob,name) => {
 	console.log(`[DLMANAGER] saving content with size ${Math.round(blob.size/1000)}kb as ${name}`)
 	let transaction = db.transaction(["offline"], "readwrite");
-	transaction.objectStore("offline").put(blob, `raw_${name}`);
+	transaction.objectStore("offline").put(blob, `raw_${name}`)
+	console.log(transaction)
 }
 
 const saveMetaToDb = (data,name) => {
 	console.log(`[DLMANAGER] saving meta as ${name}`)
 	let transaction = db.transaction(["offline"], "readwrite");
 	transaction.objectStore("offline").put(data, name);
-}
-
-const resolveUrl = (t) => {
-	return new Promise((resolve,reject) => {
-		let transaction = db.transaction(["offline"], "readwrite");
-		transaction.objectStore("offline").get(`raw_${t}`).onsuccess = function (event) {
-			var imgFile = event.target.result;
-			console.log(`[DLMANAGER] got media!`);
-		
-			// Get window.URL object
-			var URL = window.URL || window.webkitURL;
-		
-			const blobData = imgFile
-			console.log(blobData)
-			// Create and revoke ObjectURL
-			var imgURL = URL.createObjectURL(blobData);
-			resolve(imgURL)
-		};
-	})
 }
 
 const resolveDeletion = (t) => {
@@ -88,8 +70,20 @@ const getKey = (key) => {
 	return new Promise((resolve,reject) => {
 		let transaction = db.transaction(["offline"],"readwrite")
 		transaction.objectStore("offline").get(key).onsuccess = (event) => {
+			console.log(event)
 			resolve(event.target.result)
 		}
+	})
+}
+
+const resolveUrl = (t) => {
+	return new Promise((resolve,reject) => {
+		getKey(`raw_${t}`)
+		.then(p => {
+			console.log(`[DLMANAGER] got media!`);
+			var imgURL = URL.createObjectURL(p);
+			resolve(imgURL)
+		})
 	})
 }
 
@@ -101,7 +95,7 @@ const getAllKeys = () => {
 				return {
 					id:t,
 					delete: () => resolveDeletion(t),
-					getUrl: (elem) => resolveUrl(t,elem),
+					getUrl: () => resolveUrl(t),
 					meta: () => getKey(t)
 				}
 			}))
@@ -113,11 +107,6 @@ const handleProg = (ev) => {
 	console.log(ev)
 	const pc = Math.round(ev.loaded / ev.total * 100)
 	document.getElementById("isPwa_progress").style.width = `${pc}%`
-	if(pc > 99) {
-		setTimeout(() => {
-			location.reload()
-		},1000)
-	}
 }
 
 const saveContent = (url,name) => {
@@ -142,6 +131,15 @@ const saveContent = (url,name) => {
 			saveToDb(blob,name);
 	}
 	}, false);
+
+	xhr.addEventListener("readystatechange", (ev) => {
+		if(xhr.readyState === xhr.DONE) {
+			setTimeout(() => {
+				location.reload()
+			},1000)
+		}
+	})
+
 	// Send XHR
 	xhr.send();
 }
