@@ -4,7 +4,8 @@
 */
 
 let request = window.indexedDB.open("offline", 4),
-	db
+	db,
+	fS
 
 const createObjectStore = (t) => {
 
@@ -108,26 +109,39 @@ const getAllKeys = () => {
 	})
 }
 
+const handleProg = (ev) => {
+	console.log(ev)
+	const pc = Math.round(ev.loaded / ev.total * 100)
+	document.getElementById("isPwa_progress").style.width = `${pc}%`
+	if(pc > 99) {
+		setTimeout(() => {
+			location.reload()
+		},1000)
+	}
+}
+
 const saveContent = (url,name) => {
 	// Create XHR
-var xhr = new XMLHttpRequest(),
-blob;
+	var xhr = new XMLHttpRequest(),
+	blob;
 
-xhr.open("GET", url, true);
-// Set the responseType to blob
-xhr.responseType = "blob";
+	xhr.open("GET", url, true);
+	// Set the responseType to blob
+	xhr.responseType = "blob";
 
-xhr.addEventListener("load", function () {
-if (xhr.status === 200) {
-	console.log("[DLMANAGER] Content downloaded");
-	
-	// File as response
-	blob = xhr.response;
+	xhr.onprogress = handleProg
 
-	// Put the received blob into IndexedDB
-	saveToDb(blob,name);
-}
-}, false);
-// Send XHR
-xhr.send();
+	xhr.addEventListener("load", function () {
+	if (xhr.status === 200) {
+			console.log("[DLMANAGER] Content downloaded");
+			
+			// File as response
+			blob = xhr.response;
+
+			// Put the received blob into IndexedDB
+			saveToDb(blob,name);
+	}
+	}, false);
+	// Send XHR
+	xhr.send();
 }

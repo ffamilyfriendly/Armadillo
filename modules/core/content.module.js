@@ -127,6 +127,20 @@ router.get("/watch",(req,res) => {
 	res.render("watch", {v,extern,type,cookie:req.sessionID})
 })
 
+router.get("/media/:id/size",(req,res) => {
+	const { id } = req.params
+	if(!req.session.user) return res.redirect("/")
+	db.all("SELECT * FROM content WHERE id = ?",[id],(err,rows) => {
+		if(err) return res.status(h.http_codes.Internal_error).send(err)
+		if(rows[0]) {
+			require("fs").stat(rows[0].path,(errr,stats) => {
+				if(errr) return res.status(h.http_codes.Internal_error).send(errr)
+				else res.send(stats)
+			})
+		} else return res.status(h.http_codes.Not_Found).send("0")
+	})
+})
+
 router.get("/media/:cookie/:id", (req,res) => {
 	const { cookie, id } = req.params
 

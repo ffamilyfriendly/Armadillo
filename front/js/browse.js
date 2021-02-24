@@ -30,6 +30,9 @@ const doMeta = (el, id) => {
 					el.classList.remove("skel","skel-content")
 				}, 1000 * 10)
 			}
+		} else {
+			document.getElementById(`img_${id}`).remove()
+			el.classList.remove("skel","skel-content")
 		}
 	
 		mC.innerHTML += `<p>${meta.description}</p>`

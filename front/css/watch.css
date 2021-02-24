@@ -89,10 +89,28 @@ audio.player {
 	position: relative;
 }
 
+#isPwa.error {
+	background-color: red;
+	color: white;
+}
+
+#isPwa.success {
+	background-color: green;
+	color: white;
+}
+
+#isPwa.error #isPwa_progress {
+	display: none;
+}
+
+#isPwa.success #isPwa_progress {
+	display: none;
+}
+
 #isPwa_progress {
 	height: 0.3em;
 	background-color: green;
-	transition: 1s;
+	transition: .2s;
 }
 
 @keyframes slideUp {

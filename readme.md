@@ -15,9 +15,10 @@ The name was picked because I think armadillos are pretty cool looking
 - [X] track watchtime on local videos
 - [X] audio only support
 - [ ] transcoding
-- [ ] PWA
-	- [ ] offline content via indexedDB
-	- [ ] make sure pwa works
+- [X] PWA
+	- [X] offline content via indexedDB
+	- [X] make sure pwa works
+	- [ ] synchronise watchtime offline with database at next online
 
 ## Attributions
 - Logo Vector by [Vecteezy](https://www.vecteezy.com/free-vector/animals)

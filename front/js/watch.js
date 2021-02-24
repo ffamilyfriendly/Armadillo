@@ -74,6 +74,7 @@ const getDataThing = () => {
 		d = JSON.parse(d)
 		movie = { base:d }
 		if(d.next) getNextUp(d.next)
+		checkIfDownloadable()
 		if(d.hasmeta) {
 			fetch(`/${id}/meta`)
 			.then(pp => pp.text())
@@ -84,6 +85,7 @@ const getDataThing = () => {
 				movie = dd
 				movie.base = d
 				console.log({movie_object:d,meta_object:dd})
+				checkIfDownloadable()
 				if(player.nodeName === "AUDIO") doMeta()
 			})
 		} else if(player.nodeName === "AUDIO") doMeta()
@@ -147,13 +149,47 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 })
 
-/*
-    _e.waitUntil(caches.open("armadillo").then(function (cache) {
-        return cache.addAll(FILES_TO_CACHE);
-    }));
-*/
-
-//saveMetaToDb ( data, name )
+const checkIfDownloadable = () => {
+	const dlarea = document.getElementById("isPwa")
+	getKey(movie.base.id).then(i => {
+		if(i) {
+			//already downloaded
+			dlarea.classList.add("success")
+			dlarea.innerHTML = `
+				<div class="padding-medium">
+				<a style="cursor: pointer;" onclick="resolveDeletion('${movie.base.id}'); location.reload()">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/></svg>
+				</a>
+				remove from offline mode
+			</div>
+			`
+			return
+		} else {
+			fetch(`/media/${movie.base.id}/size`)
+			.then(t => t.json())
+			.then(dat => {
+				try {
+					navigator.storage.estimate().then(t => {
+						const sLeft = t.quota - t.usage
+						if(sLeft < dat.size) {
+							//not enough space!
+							dlarea.classList.add("error")
+							dlarea.innerHTML = `
+								<div class="padding-medium">
+									<b>Cannot download - Out of space!</b> Operation requires ${(dat.size/1000000).toFixed(2)}mb but only ${(sLeft/1000000).toFixed(2)}mb are availible
+								</div>
+							`
+						} else {
+							document.getElementById("size_f").innerText = `${(dat.size/1000000).toFixed(2)} mb`
+						}
+					})
+				} catch(err) {
+					console.warn(err)
+				}
+			})
+		}
+	})
+}
 
 const initOfflineMeta = () => {
 
