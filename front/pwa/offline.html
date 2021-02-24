@@ -7,8 +7,9 @@
 
 	<link rel="stylesheet" href="/static/css/colours.css">
 	<link rel="stylesheet" href="/static/css/main.css">
-	<link rel="stylesheet" href="/static/pwa/start.css">
+	<link rel="stylesheet" href="/static/pwa/offline.css">
 	<script src="/static/pwa/start.js"></script>
+	<script src="/static/js/dlContentManager.js"></script>
 	<script src="/static/pwa/offline.js"></script>
 
 	<!-- PWA -->
@@ -16,13 +17,16 @@
 	<link rel="manifest" href="/static/pwa/manifest.json">
 </head>
 <body>
+	<div id="player">
+
+	</div>
 	<div class="container padding-medium">
 		<h1>You are offline!</h1>
 		here is a list of your downloaded titles
 		<hr>
-		<ul id="movielist">
-			<li>movie here</li>
-		</ul>
+		<div id="movielist">
+
+		</div>
 	</div>
 </body>
 </html>

@@ -15,11 +15,12 @@
 
 	<link href="/static/css/main.css" rel="stylesheet">
 	<link href="/static/css/watch.css" rel="stylesheet">
+	<script src="/static/js/dlContentManager.js"></script>
 	<script src="/static/js/watch.js"></script>
 </head>
 <body>
 	<input type="hidden" id="id" value="<%= v %>">
-
+	<img id="elephant">
 	<% if(extern) { %>
 		<!-- remove any intrusive and annoying popups with sandbox -->
 		<iframe sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allowfullscreen="" class="player" src="<%= extern %>"></iframe>

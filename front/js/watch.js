@@ -72,6 +72,7 @@ const getDataThing = () => {
 	.then(d => {
 		if(!d) return
 		d = JSON.parse(d)
+		movie = { base:d }
 		if(d.next) getNextUp(d.next)
 		if(d.hasmeta) {
 			fetch(`/${id}/meta`)
@@ -81,6 +82,7 @@ const getDataThing = () => {
 				dd = JSON.parse(dd)
 
 				movie = dd
+				movie.base = d
 				console.log({movie_object:d,meta_object:dd})
 				if(player.nodeName === "AUDIO") doMeta()
 			})
@@ -151,20 +153,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }));
 */
 
-const test = () => {
-		caches.open("armadillo_content", cache => {
-			cache.keys().then(function(keys) {
-				console.log(keys)
-			});
-		})
+//saveMetaToDb ( data, name )
+
+const initOfflineMeta = () => {
+	fetch(`/${id}/timestamp`, { method:"GET" })
+	.then(d => d.text())
+	.then(t => {
+		t = JSON.parse(t)
+		saveMetaToDb({ stamp:t, meta:movie },movie.base.id)
+	})
 }
 
 const downloadMedia = () => {
-	if(!isInStandaloneMode()) alert("Download the PWA to enabled that")
 	const src = document.querySelector("source")
-	if(!src) return alert("could not find source, is this a iframe?")
+	if(!src) return alert("Cant save content. Is content external?")
 	const srcUrl = src.getAttribute("src")
-	caches.open("armadillo_content", cache => {
-		return cache.add(srcUrl)
-	})
+	console.log(movie)
+	saveContent(srcUrl,movie.base.id)
+	initOfflineMeta()
 }

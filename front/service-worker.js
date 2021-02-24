@@ -10,10 +10,12 @@ var FILES_TO_CACHE = [
 	"/static/js/pwa-main.js",
 	"/static/pwa/start.js",
 	"/static/pwa/offline.js",
+	"/static/js/dlContentManager.js",
 	"/static/pwa/start.css",
+	"/static/pwa/offline.css",
 	"/static/pwa/favicon.png",
 	"/static/css/colours.css",
-	"/static/css/main.css"
+	"/static/css/main.css",
 ];
 
 self.addEventListener("install", function (e) {
