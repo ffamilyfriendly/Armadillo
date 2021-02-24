@@ -169,6 +169,7 @@ const checkIfDownloadable = () => {
 			.then(t => t.json())
 			.then(dat => {
 				try {
+					document.getElementById("size_f").innerText = `${(dat.size/1000000).toFixed(2)} mb`
 					navigator.storage.estimate().then(t => {
 						const sLeft = t.quota - t.usage
 						if(sLeft < dat.size) {
@@ -179,12 +180,10 @@ const checkIfDownloadable = () => {
 									<b>Cannot download - Out of space!</b> Operation requires ${(dat.size/1000000).toFixed(2)}mb but only ${(sLeft/1000000).toFixed(2)}mb are availible
 								</div>
 							`
-						} else {
-							document.getElementById("size_f").innerText = `${(dat.size/1000000).toFixed(2)} mb`
 						}
 					})
 				} catch(err) {
-					console.warn(err)
+					console.log(err)
 				}
 			})
 		}
