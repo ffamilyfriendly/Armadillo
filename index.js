@@ -15,6 +15,10 @@ app.get("/favicon.ico",(req,res) => {
 	res.sendFile(require("path").join(__dirname,"favicon.ico"))
 })
 
+app.get("/service-worker.js", (req,res) => {
+	res.sendFile(require("path").join(__dirname,"./front/service-worker.js"))
+})
+
 app.use(cs({
     secret: process.armadillo.config.cookie_secret,
     resave: true,

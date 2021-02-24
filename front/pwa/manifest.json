@@ -1,0 +1,17 @@
+{
+	"short_name": "Armadillo",
+	"name": "Armadillo - The media player",
+	"icons": [
+	  {
+		"src": "/static/pwa/favicon.png",
+		"type": "image/png",
+		"sizes": "250x250"
+	  }
+	],
+	"start_url": "/static/pwa/start.html",
+	"background_color": "#121212",
+	"display": "standalone",
+	"scope": "/",
+	"theme_color": "slateblue",
+	"description": "Client for the armadillo media server!"
+  }

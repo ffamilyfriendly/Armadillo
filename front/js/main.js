@@ -20,4 +20,3 @@ fetch("/plugins.json", { method:"GET" })
 	})
 	if(window.armadillo.onPluginsLoaded) window.armadillo.onPluginsLoaded()
 }))
-

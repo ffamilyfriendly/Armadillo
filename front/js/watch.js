@@ -6,6 +6,9 @@ let movie
 let nextUp
 let mainInterval
 
+//https://stackoverflow.com/questions/41742390/javascript-to-check-if-pwa-or-mobile-web
+const isInStandaloneMode = () => (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone) || document.referrer.includes('android-app://');
+
 const inFullScreen = () => {
 	return (document.fullscreenElement && document.fullscreenElement !== null) ||
 	(document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
@@ -131,8 +134,37 @@ const doMeta = () => {
 	})
 }
 
+
 document.addEventListener("DOMContentLoaded", () => {
 	id = document.getElementById("id").value
 	if(id) { extern = false; initTimestamp(); }
 	player = document.querySelector(".player")
+	console.log(`standalone?: ${isInStandaloneMode()}`)
+	if(isInStandaloneMode()) {
+		document.getElementById("isPwa").classList.remove("hide")
+	}
 })
+
+/*
+    _e.waitUntil(caches.open("armadillo").then(function (cache) {
+        return cache.addAll(FILES_TO_CACHE);
+    }));
+*/
+
+const test = () => {
+		caches.open("armadillo_content", cache => {
+			cache.keys().then(function(keys) {
+				console.log(keys)
+			});
+		})
+}
+
+const downloadMedia = () => {
+	if(!isInStandaloneMode()) alert("Download the PWA to enabled that")
+	const src = document.querySelector("source")
+	if(!src) return alert("could not find source, is this a iframe?")
+	const srcUrl = src.getAttribute("src")
+	caches.open("armadillo_content", cache => {
+		return cache.add(srcUrl)
+	})
+}

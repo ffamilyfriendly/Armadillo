@@ -22,7 +22,6 @@ router.get("/search", (req,res) => {
 	}
 })
 
-
 router.get("/browse/:id", (req,res) => {
 	if(!req.session.user) return res.redirect("/")
 	const id = req.params.id
