@@ -35,12 +35,16 @@ const checkInit = () => {
 }
 
 router.get("/", (req,res) => {
+	res.sendFile(path.join(__dirname,"../../front/pwa/start.html"))
+})
+
+router.get("/login", (req,res) => {
 	checkInit()
 	res.sendFile(path.join(__dirname,"../../front/login.html"))
 })
 
 router.post("/register", (req,res) => {
-	if(!req.session.user) res.redirect("/")
+	if(!req.session.user) res.redirect("/login")
 	if(!req.session.user.admin) return res.status(http_codes.Forbidden).send("no registration allowed")
 	const {password, username} = req.body
 	if(!password || !username) return res.status(http_codes.Bad_Request).send("no password or username")
@@ -49,7 +53,7 @@ router.post("/register", (req,res) => {
 })
 
 router.delete("/user/:id", (req,res) => {
-	if(!req.session.user) res.redirect("/")
+	if(!req.session.user) res.redirect("/login")
 	if(!req.session.user.admin) return res.status(http_codes.Forbidden).send("bad")
 	if(req.params.id == "admin") return res.status(http_codes.Forbidden).send("can not remove admin")
 
@@ -125,7 +129,7 @@ router.post("/profilePic", (req,res) => {
 })
 
 router.get("/settings", (req,res) => {
-	if(!req.session.user) return res.redirect("/")
+	if(!req.session.user) return res.redirect("/login")
 	res.render("settings", { global: process.armadillo.permissions, me:req.session.user})
 })
 

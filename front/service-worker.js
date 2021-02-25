@@ -4,6 +4,7 @@
 *   are listed below. These will be cached 
 */
 var FILES_TO_CACHE = [
+	"/",
 	"/static/pwa/start.html",
 	"/static/pwa/offline.html",
 	"/service-worker.js",
@@ -19,21 +20,24 @@ var FILES_TO_CACHE = [
 ];
 
 self.addEventListener("install", function (e) {
+	console.log("install!")
     const _e = e;
     _e.waitUntil(caches.open("armadillo").then(function (cache) {
         return cache.addAll(FILES_TO_CACHE);
     }));
 });
 
-self.addEventListener('fetch', function (e) {
-    const _e = e;
-
-      _e.respondWith(
-          fetch(_e.request)
-              .catch(() => {
-                const file = _e.request.url.match(/(http[s]?:\/\/)?([^\/\s]+\/)(.*)/)[3];
-                console.warn(`could not fetch. Will attempt to find ${file} in cache`)
-                return caches.match(file);
-              })
-      );
-});
+self.addEventListener('fetch', function(event) {
+	event.respondWith(
+	  caches.match(event.request)
+		.then(function(response) {
+		  // Cache hit - return response
+		  if (response) {
+			return response;
+		  }
+		  return fetch(event.request);
+		}
+	  )
+	);
+  });
+  

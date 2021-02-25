@@ -9,7 +9,7 @@ const apiUrl = "https://nyafilmer.app"
 
 //https://nyafilmer.vip/list/test/
 router.get("/nyafilmer", (req,res) => {
-	if(!req.session.user) return res.redirect("/")
+	if(!req.session.user) return res.redirect("/login")
 	if(!req.query.q) return res.status(400).send("no query")
 
 	request(`${apiUrl}/ajax_list/${req.query.q}`, {timeout:5000},(err, result, body) => {
@@ -19,7 +19,7 @@ router.get("/nyafilmer", (req,res) => {
 })
 
 router.get("/nyafilmer/scrape",(req,res) => {
-	if(!req.session.user) return res.redirect("/")
+	if(!req.session.user) return res.redirect("/login")
 	if(!req.query.u) return res.status(400).send("no query")
 
 	request(`${apiUrl}/${req.query.u}`, {timeout:5000},(err, result, body) => {

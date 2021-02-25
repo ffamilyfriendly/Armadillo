@@ -9,7 +9,7 @@ router.get("/plugins.json",(req,res) => {
 })
 
 router.get("/search", (req,res) => {
-	if(!req.session.user) return res.redirect("/")
+	if(!req.session.user) return res.redirect("/login")
 
 	if(!req.query.q) {
 		res.sendFile(path.join(__dirname,"../../front/search.html"))
@@ -23,13 +23,13 @@ router.get("/search", (req,res) => {
 })
 
 router.get("/browse/:id", (req,res) => {
-	if(!req.session.user) return res.redirect("/")
+	if(!req.session.user) return res.redirect("/login")
 	const id = req.params.id
 	res.render("browse", {me:req.session.user, id})
 })
 
 router.get("/:id/new", (req,res) => {
-	if(!req.session.user || !req.session.user.admin) return res.redirect("/")
+	if(!req.session.user || !req.session.user.admin) return res.redirect("/login")
 	const rId = Buffer.from(Math.random().toString()).toString("base64")
 	const type = req.query.type||"movie"
 
@@ -40,7 +40,7 @@ router.get("/:id/new", (req,res) => {
 })
 
 router.get("/:id/edit", (req,res) => {
-	if(!req.session.user || !req.session.user.admin) return res.redirect("/")
+	if(!req.session.user || !req.session.user.admin) return res.redirect("/login")
 	
 	db.all(`SELECT * FROM content WHERE id = "${req.params.id}"`, (err, content) => {
 		db.all(`SELECT * FROM meta WHERE id = "${req.params.id}"`, (err, _meta) => {
@@ -107,7 +107,7 @@ router.post("/:id/meta", (req,res) => {
 router.post("/:id/setParent",(req,res) => {
 	const itemId = req.params.id
 	const parentId = req.query.id
-	if(!req.session.user || !req.session.user.admin) return res.status(h.http_codes.Unauthorized).redirect("/")
+	if(!req.session.user || !req.session.user.admin) return res.status(h.http_codes.Unauthorized).redirect("/login")
 	if(!parentId) return res.status(h.http_codes.Bad_Request).send("no parent id!")
 	db.run("UPDATE content SET parent = ? WHERE id = ?",[parentId,itemId])
 	res.send("Done!")
@@ -121,7 +121,7 @@ router.delete("/:id",(req,res) => {
 })
 
 router.get("/watch",(req,res) => {
-	if(!req.session.user) return res.redirect("/")
+	if(!req.session.user) return res.redirect("/login")
 	const { v, extern, type } = req.query
 	if(!v && !extern) return res.status(h.http_codes.Bad_Request).send("query param v or extern missing")
 	res.render("watch", {v,extern,type,cookie:req.sessionID})
@@ -129,7 +129,7 @@ router.get("/watch",(req,res) => {
 
 router.get("/media/:id/size",(req,res) => {
 	const { id } = req.params
-	if(!req.session.user) return res.redirect("/")
+	if(!req.session.user) return res.redirect("/login")
 	db.all("SELECT * FROM content WHERE id = ?",[id],(err,rows) => {
 		if(err) return res.status(h.http_codes.Internal_error).send(err)
 		if(rows[0]) {
@@ -157,7 +157,7 @@ router.get("/media/:cookie/:id", (req,res) => {
 })
 
 router.get("/:id/timestamp", (req,res) => {
-	if(!req.session.user) return res.redirect("/")
+	if(!req.session.user) return res.redirect("/login")
 	db.all("SELECT * FROM watching WHERE id = ? AND user = ?",[req.params.id,req.session.user.id],(err,data) => {
 		if(err) return res.status(h.http_codes.Internal_error).send(err)
 		else return res.send(data[0])
@@ -165,7 +165,7 @@ router.get("/:id/timestamp", (req,res) => {
 })
 
 router.post("/:id/timestamp", (req,res) => {
-	if(!req.session.user) return res.redirect("/")
+	if(!req.session.user) return res.redirect("/login")
 	const {time,max} = req.body
 	if(!time || !max) return res.status(h.http_codes.Bad_Request).send("missing time or max in body")
 

@@ -18,7 +18,7 @@ const doDebug = () => {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-	if(location.href.includes("start.html")) {
+	if(document.getElementById("start-loading")) {
 		console.log("attempting ping...",`${location.protocol}//${location.host}/me`)
 		fetch(`${location.protocol}//${location.host}/plugins.json`)
 		.then((e) => {
