@@ -72,6 +72,7 @@ const saveToDb = (blob,name) => {
 	dug.log(`[DLMANAGER] saving content with size ${Math.round(blob.size/1000)}kb as ${name}`)
 	console.log(`[DLMANAGER] saving content with size ${Math.round(blob.size/1000)}kb as ${name}`)
 	let transaction = db.transaction(["offline"], "readwrite");
+	if(isDebug) alert("Saving...")
 	transaction.objectStore("offline").put(blob, `raw_${name}`)
 	transaction.oncomplete = () => {
 		location.reload()
@@ -148,6 +149,8 @@ const saveContent = (url,name) => {
 
 	xhr.onprogress = handleProg
 
+	
+
 	xhr.addEventListener("load", function () {
 	if (xhr.status === 200) {
 			console.log("[DLMANAGER] Content downloaded");
@@ -155,7 +158,7 @@ const saveContent = (url,name) => {
 			
 			// File as response
 			blob = xhr.response;
-
+			if(isDebug) alert("Sending data...")
 			// Put the received blob into IndexedDB
 			saveToDb(blob,name);
 	}
