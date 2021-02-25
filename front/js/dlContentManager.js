@@ -73,6 +73,9 @@ const saveToDb = (blob,name) => {
 	console.log(`[DLMANAGER] saving content with size ${Math.round(blob.size/1000)}kb as ${name}`)
 	let transaction = db.transaction(["offline"], "readwrite");
 	transaction.objectStore("offline").put(blob, `raw_${name}`)
+	transaction.oncomplete = () => {
+		location.reload()
+	}
 }
 
 const saveMetaToDb = (data,name) => {
