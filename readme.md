@@ -21,6 +21,7 @@ The name was picked because I think armadillos are pretty cool looking
 	- [ ] synchronise watchtime offline with database at next online
 
 ## Attributions
+- [Video-Storage](https://github.com/ffamilyfriendly/Video-Storage/) by [myself](https://familyfriendly.xyz)
 - Logo Vector by [Vecteezy](https://www.vecteezy.com/free-vector/animals)
 - Icons by [iconmonstr](https://iconmonstr.com/)
 - Metadata by [themoviedb](https://www.themoviedb.org/)

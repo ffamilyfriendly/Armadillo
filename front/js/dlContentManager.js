@@ -4,6 +4,15 @@
 */
 
 let isDebug = false
+const conf = VS.getDefaultConfig()
+if(VS.isFirefox()) {
+	if(navigator.userAgent.indexOf('AppleWebKit') != -1) { }
+	else {
+		conf.chunkSize = 1073741824
+	}
+}
+conf.debug = true
+const store = new VS(conf)
 
 const dug = {
 	log: (t) => {
@@ -68,17 +77,6 @@ request.onsuccess = function (event) {
     }
 }
 
-const saveToDb = (blob,name) => {
-	dug.log(`[DLMANAGER] saving content with size ${Math.round(blob.size/1000)}kb as ${name}`)
-	console.log(`[DLMANAGER] saving content with size ${Math.round(blob.size/1000)}kb as ${name}`)
-	let transaction = db.transaction(["offline"], "readwrite");
-	if(isDebug) alert("Saving...")
-	transaction.objectStore("offline").put(blob, `raw_${name}`)
-	transaction.oncomplete = () => {
-		location.reload()
-	}
-}
-
 const saveMetaToDb = (data,name) => {
 	console.log(`[DLMANAGER] saving meta as ${name}`)
 	dug.log(`[DLMANAGER] saving meta as ${name}`)
@@ -89,9 +87,7 @@ const saveMetaToDb = (data,name) => {
 const resolveDeletion = (t) => {
 	let transaction = db.transaction(["offline"], "readwrite");
 	transaction.objectStore("offline").delete(t)
-
-	let t2 = db.transaction(["offline"], "readwrite");
-	t2.objectStore("offline").delete(`raw_${t}`)
+	store.delete(t)
 }
 
 const getKey = (key) => {
@@ -106,12 +102,12 @@ const getKey = (key) => {
 
 const resolveUrl = (t) => {
 	return new Promise((resolve,reject) => {
-		getKey(`raw_${t}`)
-		.then(p => {
-			console.log(`[DLMANAGER] got media!`);
-			dug.log(`[DLMANAGER] got media!`)
-			var imgURL = URL.createObjectURL(p);
-			resolve(imgURL)
+		store.get(t)
+		.then(obj => {
+			obj.getUrl()
+			.then(u => {
+				resolve(u)
+			})
 		})
 	})
 }
@@ -138,32 +134,13 @@ const handleProg = (ev) => {
 	document.getElementById("isPwa_progress").style.width = `${pc}%`
 }
 
+store.onprogress = () => {
+	const pc = Math.round(store.c.loaded / store.c.total * 100)
+	document.getElementById("isPwa_progress").style.width = `${pc}%`
+}
+
 const saveContent = (url,name) => {
-	// Create XHR
-	var xhr = new XMLHttpRequest(),
-	blob;
-
-	xhr.open("GET", url, true);
-	// Set the responseType to blob
-	xhr.responseType = "blob";
-
-	xhr.onprogress = handleProg
-
-	
-
-	xhr.addEventListener("load", function () {
-	if (xhr.status === 200) {
-			console.log("[DLMANAGER] Content downloaded");
-			dug.log(`[DLMANAGER] Content downloaded`)
-			
-			// File as response
-			blob = xhr.response;
-			if(isDebug) alert("Sending data...")
-			// Put the received blob into IndexedDB
-			saveToDb(blob,name);
-	}
-	}, false);
-
-	// Send XHR
-	xhr.send();
+	store.save(name,url, () => {
+		location.reload()
+	})
 }

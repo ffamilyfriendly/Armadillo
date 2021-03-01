@@ -9,18 +9,21 @@
 let video = document.createElement("video")
 let mst
 
-const doVideoStuff = () => {
-	video = document.getElementById("mainVideo")
-
-	video.onplay = () => {
+const setVideoThing = (vid) => {
+	vid.onplay = () => {
 		console.log("mst",mst)
 		if(mst.stamp && mst.stamp.time > 1) {
 			if(confirm(`do you want to continue where you last left off?`)) {
-				video.currentTime = mst.stamp.time
+				vid.currentTime = mst.stamp.time
 			}
 		}
-		video.onplay = null
+		vid.onplay = null
 	}
+}
+
+const doVideoStuff = () => {
+	video = document.getElementById("mainVideo")
+	setVideoThing(video)
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -39,8 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					movie.getUrl()
 					.then(u => {
 						container.innerHTML = `
-							<video id="mainVideo" class="surface" controls>
-								<source src="${u}">
+							<video id="mainVideo" class="surface" controls="true" src="${u.url}" type="${u.type}" preload="">
 							</video>
 						`
 						movie.meta().then(m => {

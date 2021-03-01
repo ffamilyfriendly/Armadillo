@@ -9,6 +9,7 @@ var FILES_TO_CACHE = [
 	"/static/pwa/offline.html",
 	"/service-worker.js",
 	"/static/js/pwa-main.js",
+	"/static/js/Video-Storage.js",
 	"/static/pwa/start.js",
 	"/static/pwa/offline.js",
 	"/static/js/dlContentManager.js",
