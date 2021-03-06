@@ -6,6 +6,13 @@ let movie
 let nextUp
 let mainInterval
 
+const actionTitle = {
+	movie:"watching",
+	audio:"listening to"
+}
+
+const thumbnail = movie => movie.thumbnail.startsWith("/") ? `https://image.tmdb.org/t/p/w500/${movie.thumbnail}` : movie.thumbnail
+
 //https://stackoverflow.com/questions/41742390/javascript-to-check-if-pwa-or-mobile-web
 const isInStandaloneMode = () => (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone) || document.referrer.includes('android-app://');
 
@@ -101,13 +108,14 @@ const initTimestamp = () => {
 		if(!d) return mainInterval = setInterval(setTimeStamp,2000)
 		d = JSON.parse(d)
 
-		const handle = doNotification("has-watched",-1,true)
+		doNotification("has-watched-container",-1,true)
 		document.querySelector("#resumebtn").onclick = () => { 
 			player.currentTime = d.time
+			player.play()
 			mainInterval = setInterval(setTimeStamp,2000)
-			handle()
+			document.getElementById("has-watched").remove()
 		}
-		document.querySelector("#closebtn").onclick = () => { handle(); mainInterval = setInterval(setTimeStamp,2000) }
+		document.querySelector("#closebtn").onclick = () => { document.getElementById("has-watched").remove(); mainInterval = setInterval(setTimeStamp,2000) }
 		console.log(d)
 	})
 }
@@ -132,8 +140,14 @@ const doMeta = () => {
 	.then(data => {
 		data = JSON.parse(data)
 		document.getElementById("ap_title").innerText = data.displayname
+		player.setAttribute("title",movie.fullname||movie.base.displayname)
+		document.getElementById("ap_title").innerText = movie.fullname||movie.base.displayname
+
+		document.title = `${actionTitle[movie.base.type]||""} ${movie.fullname||movie.base.displayname}`
+
 		if(movie && movie.thumbnail) {
-			document.getElementById("ap_img").setAttribute("src",movie.thumbnail)
+			document.getElementById("ap_img").setAttribute("src",thumbnail(movie))
+			player.setAttribute("poster",thumbnail(movie))
 		}
 	})
 }
@@ -150,6 +164,10 @@ const checkIfDownloadable = () => {
 	const dlarea = document.getElementById("isPwa")
 	getKey(movie.base.id).then(i => {
 		if(i) {
+
+			console.log("[SYNCING offline meta]")
+			initOfflineMeta()
+
 			//already downloaded
 			dlarea.classList.add("success")
 			dlarea.innerHTML = `
@@ -169,7 +187,7 @@ const checkIfDownloadable = () => {
 					document.getElementById("size_f").innerText = `${(dat.size/1000000).toFixed(2)} mb`
 					navigator.storage.estimate().then(t => {
 						const sLeft = t.quota - t.usage
-						if(sLeft < dat.size && false) {
+						if(sLeft < dat.size) {
 							//not enough space!
 							dlarea.classList.add("error")
 							dlarea.innerHTML = `
@@ -190,7 +208,7 @@ const checkIfDownloadable = () => {
 const initOfflineMeta = () => {
 
 	caches.open("armadillo").then(cache => {
-		cache.add(movie.thumbnail.startsWith("/") ? `https://image.tmdb.org/t/p/w500/${movie.thumbnail}` : movie.thumbnail)
+		cache.add(thumbnail(movie))
 	})
 
 	fetch(`/${id}/timestamp`, { method:"GET" })
@@ -202,6 +220,7 @@ const initOfflineMeta = () => {
 			console.log(err)
 			t = null
 		}
+		console.log({ movie,t })
 		saveMetaToDb({ stamp:t, meta:movie },movie.base.id)
 	})
 }
