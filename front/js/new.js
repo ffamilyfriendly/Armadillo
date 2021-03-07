@@ -133,7 +133,7 @@ const checkMeta = () => {
 // I am in pain why
 let doCheck = true
 const checkMetaHandlers = () =>  {
-	if(hasCheckedMeta) {
+	if(doCheck) {
 		checkMeta()
 		doCheck = false
 	}
