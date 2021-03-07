@@ -117,7 +117,7 @@ window.addEventListener("scroll", () => {
 	}
 })
 
-window.addEventListener("DOMContentLoaded", () => {
+const checkMeta = () => {
 	fetch("/meta/handlers", { method:"GET" } )
 	.then(tDATA => tDATA.json())
 	.then(NDATA => {
@@ -128,6 +128,10 @@ window.addEventListener("DOMContentLoaded", () => {
 		alert("could not get handlers (check logs)")
 		console.log(err)
 	})
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+	checkMeta()
 })
 
 const doSlideUp = () => {
