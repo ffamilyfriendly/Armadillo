@@ -28,17 +28,22 @@ self.addEventListener("install", function (e) {
     }));
 });
 
+
 self.addEventListener('fetch', function(event) {
+
+	const url = new URL(event.request.url);
+
+	if(url.origin === location.origin && (url.pathname.startsWith("/media/"))) return
+
 	event.respondWith(
-	  caches.match(event.request)
-		.then(function(response) {
-		  // Cache hit - return response
-		  if (response) {
-			return response;
-		  }
-		  return fetch(event.request);
-		}
-	  )
-	);
+		caches.match(event.request)
+			.then(function(response) {
+			if (response) {
+				return response;
+			}
+			return fetch(event.request);
+			}
+		)
+		);
+	
   });
-  

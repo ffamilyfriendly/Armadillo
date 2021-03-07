@@ -1,5 +1,5 @@
 if("serviceWorker" in navigator) {
-	navigator.serviceWorker.register("/service-worker.js", { registrationStrategy:"registerImmediately" })
+	navigator.serviceWorker.register(`/service-worker.js?random=${Date.now()}`, { registrationStrategy:"registerImmediately" })
 	.then(reg => {
 		console.log(`[WORKER] registration successfull! Scope: ${reg.scope}`)
 	})
