@@ -15,7 +15,7 @@ router.get("/search", (req,res) => {
 		res.sendFile(path.join(__dirname,"../../front/search.html"))
 	} else {
 		const f = `%${req.query.q}%`
-		db.all(`SELECT * FROM content WHERE displayname LIKE ? AND type = "movie"`,[f], (err1,rows1) => {
+		db.all(`SELECT * FROM content WHERE displayname LIKE ? AND type != "category"`,[f], (err1,rows1) => {
 			if(err1) return res.status(h.http_codes.Internal_error).send(err1)
 			res.send(rows1)
 		})
