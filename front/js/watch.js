@@ -107,7 +107,7 @@ const initTimestamp = () => {
 	.then(d => {
 		if(!d) return mainInterval = setInterval(setTimeStamp,2000)
 		d = JSON.parse(d)
-
+		document.getElementById("has-watched").classList.remove("hide")
 		doNotification("has-watched-container",-1,true)
 		document.querySelector("#resumebtn").onclick = () => { 
 			player.currentTime = d.time
