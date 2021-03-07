@@ -79,7 +79,7 @@
 			<button onclick="saveMetaData()" class="button primary padding-large margin-large">Save meta data</button>
 
 			<!-- Only usable with themoviedatabase plugin enabled -->
-			<div class="hide" id="tmdb">
+			<div id="tmdb">
 
 				<div id="updated-notification" class="hide">
 					<a onclick="doSlideUp()" href="#top">
@@ -89,10 +89,16 @@
 					</a>
 				</div>
 
-				<a onclick="initMetaImport()" style="cursor: pointer;" >import metadata with tmdb</a>
-				<div class="hide" id="metaImport">
+				<hr>
+				<h1>Import metadata</h1>
+				<div id="metaImport">
 					<input type="search" id="searchUrl">
-					<button onclick="searchMeta()" class="button primary padding-medium">Search</button>
+					<button onclick="searchMeta()" class="button primary padding-medium">Search with</button>
+
+					<select id="handler">
+
+					</select>
+
 					<hr>
 					<div id="metaSearchResults">
 

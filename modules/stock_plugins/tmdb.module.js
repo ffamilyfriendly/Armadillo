@@ -1,20 +1,33 @@
-const router = require("express").Router()
 const h = require("../core/helpers")
+const metaModule = require("../core/meta.module.js")
 const fs = require("fs")
 const request = require("request")
-
 let apiKey = ""
 
-router.get("/meta/search", (req,res) => {
-	const query = req.query.q
-	if(!req.session.user || !req.session.user.admin) res.status(h.http_codes.Forbidden).send("not logged in or not admin")
-	if(!query) res.status(h.http_codes.Bad_Request).send("no query")
-	const qUrl = `https://api.themoviedb.org/3/search/multi?query=${query}&api_key=${apiKey}`
-	request(qUrl,(err, result, body) => {
-		if(err) return res.status(h.http_codes.Internal_error).send(err)
-		else res.send(body)
+let handler = {}
+
+const paseItems = (items) => {
+	items = items.results
+	return items.map(item => {
+		return {
+			id: item.id,
+			title: item.title || item.original_name || "no title",
+			description: item.overview || "no description",
+			rating: item.vote_average || 0,
+			thumbnail: item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : ""
+		}
 	})
-})
+}
+
+handler.getAll = (query) => {
+	return new Promise((reject,resolve) => {
+		const qUrl = `https://api.themoviedb.org/3/search/multi?query=${query}&api_key=${apiKey}`
+		request(qUrl,(err, result, body) => {
+			if(err) return reject(err)
+			else resolve(paseItems(JSON.parse(body)))
+		})
+	})
+}
 
 const run = () => {
 	try {
@@ -22,8 +35,7 @@ const run = () => {
 	} catch(err) {
 		console.log("got error in metadata plugin reading api key. Are you sure a file called \"api.key\" exists in same dir?")
 	}
-	
-	process.armadillo.app.use(router)
+	metaModule.handlers["tmdb"] = handler
 }
 
 module.exports = {

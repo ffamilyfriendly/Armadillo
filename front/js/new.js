@@ -1,9 +1,3 @@
-window.armadillo.onPluginsLoaded = () => {
-	if(window.armadillo.plugins["themoviedb meta grabber"] && window.armadillo.plugins["themoviedb meta grabber"].enabled) {
-		document.getElementById("tmdb").classList.remove("hide")
-	}
-}
-
 let fetched = {}
 
 const initMetaImport = () => {
@@ -18,10 +12,10 @@ const metaGetAndFill = (id) => {
 	if(!fetched[id]) return alert("could not find meta")
 	document.getElementById("updated-notification").classList.remove("hide")
 	const m = fetched[id]
-	setValue("fullname",m.media_type == "movie" ? m.original_title : m.name)
-	setValue("description",m.overview)
-	setValue("thumbnail",m.poster_path)
-	setValue("rating",m.vote_average)
+	setValue("fullname",m.title)
+	setValue("description",m.description)
+	setValue("thumbnail",m.thumbnail)
+	setValue("rating",m.rating)
 }
 
 const saveMetaData = () => {
@@ -76,14 +70,20 @@ const saveMainData = () => {
 }
 
 const searchMeta = () => {
+
+	const handler = document.getElementById("handler").value
+
+	if(!handler) return alert("no handler selected")
+
 	const query = document.getElementById("searchUrl").value
 	const container = document.getElementById("metaSearchResults")
 	if(!query) return
-	fetch(`/meta/search?q=${query}`, {method:"GET"})
+	container.innerHTML = ""
+	fetch(`/meta/${handler}/${query}`, {method:"GET"})
 	.then(p => p.text())
 	.then(t => {
 		const data = JSON.parse(t)
-		data.results.forEach(m => {
+		data.forEach(m => {
 			fetched[m.id] = m
 			const mCon = document.createElement("div")
 			const importbtn = document.createElement("div")
@@ -95,12 +95,12 @@ const searchMeta = () => {
 
 			console.log(m)
 			mCon.classList = "mdb-res"
-			mCon.innerHTML += `<img src="https://image.tmdb.org/t/p/w500/${m.poster_path}" alt="movie poster"/>`
+			mCon.innerHTML += `<img src="${m.thumbnail}" alt="movie poster"/>`
 			const oMc = document.createElement("div")
 			oMc.classList = "metaContent"
-			oMc.innerHTML += `<h1>${m.media_type == "movie" ? m.original_title : m.name}</h1>`
-			oMc.innerHTML += `<p>${m.overview}</p>`
-			oMc.innerHTML += `<p><b>rating:</b>${m.vote_average||"---"}/10 <b>Released:</b> ${m.media_type == "movie" ? m.release_date : m.first_air_date}</p>`
+			oMc.innerHTML += `<h1>${m.title}</h1>`
+			oMc.innerHTML += `<p>${m.description}</p>`
+			oMc.innerHTML += `<p><b>rating:</b>${m.rating||"---"}/10</p>`
 			mCon.appendChild(oMc)
 			container.appendChild(mCon)
 		})
@@ -115,6 +115,16 @@ window.addEventListener("scroll", () => {
 	if(position.top < window.innerHeight && position.bottom >= 0) {
 		doSlideUp()
 	}
+})
+
+window.addEventListener("DOMContentLoaded", () => {
+	//handler
+	fetch("/meta/handlers", { method:"GET" } )
+	.then(t => t.json())
+	.then(data => {
+		const handlerList = document.getElementById("handler")
+		data.forEach(d => handlerList.innerHTML += `<option value="${d}">${d}</option>`)
+	})
 })
 
 const doSlideUp = () => {
