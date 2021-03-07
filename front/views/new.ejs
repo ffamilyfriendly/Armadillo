@@ -92,7 +92,7 @@
 				<hr>
 				<h1>Import metadata</h1>
 				<div id="metaImport">
-					<input type="search" id="searchUrl">
+					<input onkeydown="checkMetaHandlers()" type="search" id="searchUrl">
 					<button onclick="searchMeta()" class="button primary padding-medium">Search with</button>
 
 					<select id="handler">

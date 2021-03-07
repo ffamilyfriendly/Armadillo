@@ -130,13 +130,14 @@ const checkMeta = () => {
 	})
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-	// I have no clue why it wont work without this
-	setTimeout(() => {
-		console.log("GETTING META!!!")
+// I am in pain why
+let doCheck = true
+const checkMetaHandlers = () =>  {
+	if(hasCheckedMeta) {
 		checkMeta()
-	},1000)
-})
+		doCheck = false
+	}
+}
 
 const doSlideUp = () => {
 	const uc = document.getElementById("un-content")
