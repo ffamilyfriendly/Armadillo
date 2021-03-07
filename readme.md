@@ -15,6 +15,7 @@ The name was picked because I think armadillos are pretty cool looking
 - [X] track watchtime on local videos
 - [X] audio only support
 - [ ] transcoding
+- [ ] automatically link audiobook containing one or more files
 - [X] PWA
 	- [X] offline content via indexedDB
 	- [X] make sure pwa works
