@@ -118,12 +118,15 @@ window.addEventListener("scroll", () => {
 })
 
 window.addEventListener("DOMContentLoaded", () => {
-	//handler
 	fetch("/meta/handlers", { method:"GET" } )
-	.then(t => t.json())
-	.then(data => {
+	.then(tDATA => tDATA.json())
+	.then(NDATA => {
 		const handlerList = document.getElementById("handler")
-		data.forEach(d => handlerList.innerHTML += `<option value="${d}">${d}</option>`)
+		NDATA.forEach(d => handlerList.innerHTML += `<option value="${d}">${d}</option>`)
+	})
+	.catch(err => {
+		alert("could not get handlers (check logs)")
+		console.log(err)
 	})
 })
 
