@@ -130,9 +130,8 @@ const checkMeta = () => {
 	})
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-	checkMeta()
-})
+if(document.readyState !== "loading") checkMeta()
+else window.addEventListener("DOMContentLoaded",checkMeta)
 
 const doSlideUp = () => {
 	const uc = document.getElementById("un-content")
