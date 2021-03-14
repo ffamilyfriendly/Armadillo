@@ -141,3 +141,22 @@ audio::--webkit-media-controls-play-button {
 		position: absolute;
 	}
 }
+
+#cast-audio, #cast-video {
+	cursor: pointer;
+}
+
+#cast-video {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 1.5em;
+	z-index: 999999;
+}
+
+#cast-audio {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 1.5em;
+}

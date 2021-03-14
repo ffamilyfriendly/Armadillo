@@ -20,6 +20,10 @@ The name was picked because I think armadillos are pretty cool looking
 	- [X] offline content via indexedDB
 	- [X] make sure pwa works
 	- [ ] synchronise watchtime offline with database at next online
+- [ ] chromecast
+	- [X] get casting to work
+	- [ ] sync controlls
+	- [ ] more to come
 
 ## Attributions
 - [Video-Storage](https://github.com/ffamilyfriendly/Video-Storage/) by [myself](https://familyfriendly.xyz)
@@ -27,6 +31,7 @@ The name was picked because I think armadillos are pretty cool looking
 - Icons by [iconmonstr](https://iconmonstr.com/)
 - Metadata by [themoviedb](https://www.themoviedb.org/)
 - Skeleton loading animation by [EnderAdel](https://github.com/adel-sbeh) [(website)](https://endercomm.net/)
+- [chromecast library](https://developers.google.com/cast/docs/reference/chrome) and [icons](https://developers.google.com/cast/downloads/cast_icon_material.zip) by google
 
 ---
 If you find any issues with the code open an issue [**HERE**](https://github.com/ffamilyfriendly/Armadillo/issues)

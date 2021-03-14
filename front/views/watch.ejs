@@ -13,11 +13,17 @@
 		}
 	</script>
 
+	<!-- CHROMECAST -->
+	<!-- DOCUMENTATION: https://developers.google.com/cast/docs/web_receiver/basic -->
+	<script src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+	<!-- ////////// -->
+
 	<link href="/static/css/main.css" rel="stylesheet">
 	<link href="/static/css/watch.css" rel="stylesheet">
 	<script src="/static/js/Video-Storage.js"></script>
 	<script src="/static/js/dlContentManager.js"></script>
 	<script src="/static/js/watch.js"></script>
+	<script src="/static/js/cast.js"></script>
 </head>
 <body>
 	<input type="hidden" id="id" value="<%= v %>">
@@ -27,12 +33,14 @@
 		<iframe sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allowfullscreen="" class="player" src="<%= extern %>"></iframe>
 	<% } else { %>
 		<% if(type === "movie") { %>
+			<a id="cast-video" class="hide cast-enabled cast-icon" onclick="launchApp()" class="margin-medium"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M7.945 23h-2.016c-.439-3.064-2.865-5.49-5.929-5.929v-2.016c4.169.462 7.483 3.776 7.945 7.945zm4.017 0h-2.007c-.476-5.274-4.681-9.479-9.955-9.955v-2.007c6.378.486 11.476 5.584 11.962 11.962zm-8.062 0h-3.9v-3.9c1.958.398 3.502 1.942 3.9 3.9zm20.1 0h-10v-2h8v-15h-20v3h-2v-8h24v22z"/></svg></a>
 			<video class="player" controls>
 				<source src="/media/<%= cookie %>/<%= v %>">
 			</video>
 		<% } else if(type === "audio") { %>
 			<div id="ap_container">
 				<div id="ap" class="surface padding-large">
+					<a id="cast-audio" class="hide cast-enabled cast-icon" onclick="launchApp()" class="margin-medium"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M7.945 23h-2.016c-.439-3.064-2.865-5.49-5.929-5.929v-2.016c4.169.462 7.483 3.776 7.945 7.945zm4.017 0h-2.007c-.476-5.274-4.681-9.479-9.955-9.955v-2.007c6.378.486 11.476 5.584 11.962 11.962zm-8.062 0h-3.9v-3.9c1.958.398 3.502 1.942 3.9 3.9zm20.1 0h-10v-2h8v-15h-20v3h-2v-8h24v22z"/></svg></a>
 					<img id="ap_img" src="https://www.shareicon.net/data/2015/08/01/78337_music_512x512.png">
 					<h1 id="ap_title">Title</h1>
 					<audio class="player" controls>
