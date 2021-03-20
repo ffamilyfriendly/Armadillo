@@ -16,6 +16,7 @@ The name was picked because I think armadillos are pretty cool looking
 - [X] audio only support
 - [ ] transcoding
 - [ ] automatically link audiobook containing one or more files
+- [ ] Single Page Application, allows player to persist
 - [X] PWA
 	- [X] offline content via indexedDB
 	- [X] make sure pwa works

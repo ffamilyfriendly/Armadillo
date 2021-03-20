@@ -1,7 +1,16 @@
 .edit-btn {
+	opacity: 0.1;
+	transition: .30s;
 	position: absolute;
 	top: 0;
 	right: 0;
+	background-color: #121212;
+	padding: 0.25em;
+	z-index: 9999999999;
+}
+
+.edit-btn:hover {
+	opacity: 1;
 }
 
 .content {
@@ -14,6 +23,16 @@
 	position: absolute;
 	bottom: 0;
 	right: 0;
+}
+
+#filmContainer .content {
+	transition: 0.3s;
+}
+
+#filmContainer .content:hover {
+	transform: scale(1.05);
+	background-color: #2b2b2b;
+	z-index: 999999;
 }
 
 .shitty {
@@ -70,13 +89,14 @@
 
 .content img {
 	width: 10em;
+	margin: 0;
 	height: auto;
 	display: inline-block;
 }
 
 .pbar-outer {
 	width: 100%;
-	height: 0.5em;
+	height: 0.25em;
 	position: absolute;
 	left: 0;
 	bottom: 0;
@@ -126,10 +146,15 @@
 	font-weight: bold;
 	color: var(--primary);
 }
+
 @media only screen and (max-width: 546px) {
 	.content {
 		overflow: hidden;
 		height: 15em;
 		font-size: 0.75em;
+	}
+
+	.edit-btn {
+		display: none;
 	}
 }

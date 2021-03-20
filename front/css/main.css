@@ -71,6 +71,12 @@ svg path {
 	box-shadow: var(--on-surface-shadow);
 }
 
+.surface-light {
+	background-color: var(--surface);
+	color: var(--on-surface);
+	box-shadow: var(--on-surface-shadow);
+}
+
 /* borders */
 
 .border-error {
@@ -264,6 +270,14 @@ img.skel {
 
 .skel-content {
 	min-height: 10em;
+}
+
+.curved {
+	border-radius: 0.75em;
+}
+
+.overflow-hide {
+	overflow: hidden;
 }
 
 #debuglogs {

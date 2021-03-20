@@ -113,9 +113,6 @@ const loadMedia = async () => {
 	const player = document.querySelector(".player")
 	const source = player.querySelector("source")
 
-	//debughost
-	//const host = "https://film.familyfriendly.xyz/media/bgGlQiI7J3nudZEXsGvnGAePx7Jgt9PB/MC42MzQzMzI5NDE3NzM3NDkx"
-
 	//productionhost
 	const host = `${location.protocol}//${location.host}${source.getAttribute("src")}`
 

@@ -144,19 +144,26 @@ audio::--webkit-media-controls-play-button {
 
 #cast-audio, #cast-video {
 	cursor: pointer;
+	z-index: 999999;
+	margin: 1.5em;
 }
 
 #cast-video {
 	position: absolute;
 	top: 0;
 	right: 0;
-	margin: 1.5em;
-	z-index: 999999;
 }
 
 #cast-audio {
 	position: absolute;
+	padding: 1em;
 	top: 0;
 	right: 0;
-	margin: 1.5em;
+	background-color: #121212;
+	border-radius: 50%;
+}
+
+#cast-audio svg {
+	width: 24px;
+	height: 24px;
 }

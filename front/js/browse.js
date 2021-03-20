@@ -92,7 +92,7 @@ const doContent = (cc) => {
 	cc.forEach(c => {
 		const container = document.createElement("div")
 		container.innerHTML += `<img id="img_${c.id}">`
-		container.classList = `surface content padding-medium margin-medium ${c.type} skel skel-content`
+		container.classList = `content surface-light overflow-hide margin-medium ${c.type} skel skel-content curved`
 
 		container.onclick = () => { if(c.type !== "category") {location.href = `/watch?v=${c.id}&type=${c.type}`} else {location.href = `/browse/${c.id}`}}
 
