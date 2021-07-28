@@ -2,7 +2,7 @@
 	/* Surfaces and such */
 	--on-background: #ffffff;
 	--on-surface: #ffffff;
-	--background: #121212;
+	--background: black;
 	--surface: #242424;
 	--on-surface-shadow: none;
 
@@ -10,6 +10,7 @@
 	--success: rgb(16, 172, 16);
 	--error: red;
 	--info: rgb(0, 217, 255);
+	--disabled: gray;
 
 	/* element colours */
 	--primary: slateblue;

@@ -1,6 +1,6 @@
 const _basicDiv = (type,name) => {
 	const d = document.createElement("div")
-	d.classList = `Element-${type}-${name}`
+	d.classList = `Element-${type}${name ? `-${name}` : ""}`
 	return d
 }
 
@@ -85,5 +85,60 @@ class Modal extends BaseElement {
 
 		this.element.classList += "Element-Modal-Outbound"
 		setTimeout(() => { this.parent.remove() }, 250)
+	}
+}
+
+class Toast extends BaseElement {
+	constructor(content, options) {
+		console.log("options:",options)
+		super(options, {
+			expires: true, // will expire on its own after a set time, otherwise it has to be removed by user action
+			expireTime: 5, // time in seconds it will take for toast to expire,
+			type: "info", // the type of toast, "info", "success", and "error",
+			classList: "",
+			contentHTML: false // if content will be parsed as html or text. For XSS prevention this is false by default
+		})
+
+		this.dismiss = this.dismiss.bind(this)
+
+		this.container = (() => {
+			let tc = document.getElementById("Element-Toast-Container")
+			if(!tc) {
+				tc = document.createElement("div")
+				tc.id = "Element-Toast-Container"
+				tc.innerHTML = "<div id=\"Element-Toast-Container-Inner\"></div>"
+				document.body.append(tc)
+			}
+			if(tc.parentElement != document.body) document.body.appendChild(tc)
+			return tc
+		})()
+
+		this.tcInner = document.getElementById("Element-Toast-Container-Inner")
+
+		this.toast = _basicDiv("Toast")
+		this.toast.classList += this.options.classList + ` ${this.options.type}`
+		this.toast.onclick = this.dismiss
+
+		this.content = document.createElement("div")
+		this.content.classList = "Element-Toast-Content"
+		this.options.contentHTML ? this.content.innerHTML = content : this.content.innerText = content
+
+		this.toast.appendChild(this.content)
+
+		if(this.options.expires) {
+			console.log(this.options, options)
+			const bar = document.createElement("div")
+			bar.classList = "Element-Toast-Expire-Outer"
+			bar.innerHTML = `<div style="animation-duration: ${this.options.expireTime}s;" class="Element-Toast-Expire-Inner"></div>`
+			this.toast.append(bar)
+			setTimeout(this.dismiss, this.options.expireTime * 1000)
+		}
+
+		
+		this.tcInner.append(this.toast)
+	}
+
+	dismiss() {
+		this.toast.remove()
 	}
 }

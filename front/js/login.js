@@ -12,7 +12,10 @@ const doLogin = (password, username) => {
 		}
 	})
 	.then(res => {
-		if(!res.ok) return alert("wrong password")
+		if(!res.ok) {
+			const toast = new Toast("wrong password", { type: "error", expireTime: 7 })
+			return
+		}
 		location.href = "/browse/root"
 	})
 	.catch(err => {
@@ -22,9 +25,29 @@ const doLogin = (password, username) => {
 
 const handleLogin = (pp) => {
 	if(window.armadillo.loggedIn && window.armadillo.user.id == pp) return location.href = "/browse/root"
-	const pass = prompt(`password for ${pp}`)
-	if(!pass) return
-	doLogin(pass,pp)
+	const lModal = new Modal(`Login as ${pp}`)
+
+	const inpt = document.createElement("input")
+	const btn = document.createElement("button")
+	btn.classList = "button login-btn button-large primary full-width disabled curved"
+	btn.innerText = "login"
+	btn.onclick = () => {
+		if(inpt.value.length <= 0) return;
+		doLogin(inpt.value, pp)
+	}
+
+	inpt.type = "password"
+	inpt.classList = "password padding-medium curved"
+	inpt.onkeydown = () => {
+		if(inpt.value.length > 0) btn.classList.remove("disabled")
+		else btn.classList.add("disabled")
+	}
+
+	lModal.body.append(inpt, btn)
+
+	//const pass = prompt(`password for ${pp}`)
+	//if(!pass) return
+	//doLogin(pass,pp)
 }
 
 const manageUser = (user) => {
