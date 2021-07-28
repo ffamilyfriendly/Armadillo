@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="./css/main.css">
+	<link rel="stylesheet" href="./css/colours.css">
+	<link rel="stylesheet" href="./css/elements.css">
+</head>
+<body>
+	<div class="blur">
+		<div id="test">
+			Lorem ipsum, dolor sit amet consectetur adipisicing elit. Totam, ipsum soluta dolorem maiores deleniti quam neque alias? Vitae officia odit veniam cumque veritatis, ad voluptatibus, ipsa nisi, saepe eum eaque.
+		</div>
+		<h1>Hello!</h1>
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dolorum facere, doloremque nesciunt sit sint nemo alias quae incidunt veritatis natus. Ex animi sed qui, voluptas in vero repellendus eum.</p>
+	</div>
+</body>
+<script src="./js/global/elements.js"></script>
+<script>
+	const modal = new Modal("Login")
+
+	modal.body.innerHTML = `
+		<input type="password">
+	`
+	modal.footer.innerHTML = "<small> Wallah </small>"
+</script>
+</html>

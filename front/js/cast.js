@@ -1,10 +1,15 @@
 //Code is per usual from so https://stackoverflow.com/questions/31937269/how-to-implement-chromecast-support-for-html5-player
 
+let castPlayer = null
+let castSession = null
+
 document.addEventListener("DOMContentLoaded", () => {
 	var loadCastInterval = setInterval(function(){
 		if (typeof chrome != "undefined" && chrome.cast.isAvailable) {
 				console.log('Cast has loaded.');
 				document.querySelectorAll(".cast-enabled").forEach(cItem => cItem.classList.remove("hide"))
+				castPlayer = new cast.framework.RemotePlayer()
+				castSession = new cast.framework.RemotePlayerController(castPlayer);
 				clearInterval(loadCastInterval);
 				initializeCastApi();
 		} else {
@@ -13,6 +18,36 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 }, 1000);
 })
+
+const inputChange = (e) => {
+	console.log(e)
+}
+
+const configureControlls = () => {
+	let progbar = document.getElementById("cast-prog")
+	progbar.setAttribute("max",session.media[0].media.duration)
+	progbar.value = session.media[0].media.currentTime
+
+	castSession.addEventListener(
+		cast.framework.RemotePlayerEventType.MEDIA_INFO_CHANGED, function() {
+		  // Use the current session to get an up to date media status.
+		  let session = cast.framework.CastContext.getInstance().getCurrentSession();
+	  
+		  if (!session) {
+			  return;
+		  }
+	  
+		  // Contains information about the playing media including currentTime.
+		  let mediaStatus = session.getMediaSession();
+		  if (!mediaStatus) {
+			  return;
+		  }
+	  
+		  // mediaStatus also contains the mediaInfo containing metadata and other
+		  // information about the in progress content.
+		  console.log(mediaStatus)
+		});
+}
 
 function initializeCastApi() {
 	cast.framework.setLoggerLevel(0)
@@ -114,7 +149,9 @@ const loadMedia = async () => {
 	const source = player.querySelector("source")
 
 	//productionhost
-	const host = `${location.protocol}//${location.host}${source.getAttribute("src")}`
+	//const host = `${location.protocol}//${location.host}${source.getAttribute("src")}`
+
+	const host = `https://film.familyfriendly.xyz/media/FZQQHQkE2EflNZejRYOB6dFgATBILccJ/MC42MzQzMzI5NDE3NzM3NDkx`
 
 	console.log(host)
 	var mediaInfo = new chrome.cast.media.MediaInfo(host);
@@ -139,15 +176,19 @@ function onLoadSuccess() {
 	console.log('Successfully loaded media.');
 	document.querySelector(".cast-icon svg path").style.fill = "cyan"
 	document.querySelector(".cast-icon").onclick = stopApp
+	document.getElementById("ccc").classList.remove("hide")
+	configureControlls()
 }
 
 function onLoadError() {
 	console.log('Failed to load media.');
 	document.querySelector(".cast-icon svg path").style.fill = "red"
+	document.getElementById("ccc").classList.add("hide")
 }
 
 function stopApp() {
 	document.querySelector(".cast-icon svg path").style.fill = "white"
+	document.getElementById("ccc").classList.add("hide")
 	document.querySelector(".cast-icon").onclick = launchApp
 	session.stop(onStopAppSuccess, onStopAppError);
 }
