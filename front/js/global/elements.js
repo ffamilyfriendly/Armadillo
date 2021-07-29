@@ -142,3 +142,15 @@ class Toast extends BaseElement {
 		this.toast.remove()
 	}
 }
+
+class MediaItem extends BaseElement {
+	constructor(options) {
+		super(options, {
+			type: null,
+			thumbnail: null,
+			title: null,
+			onclick: null,
+			
+		})
+	}
+}
